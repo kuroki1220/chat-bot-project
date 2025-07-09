@@ -1,0 +1,31 @@
+# Python
+pycache/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+lib/
+include/
+bin/
+share/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.pytest_cache/
+htmlcov/
+.ipynb_checkpoints
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Docker
+.dockerignore
+
+# Misc
+.DS_Store
+.env
+*.log
+*.tmp
