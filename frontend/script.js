@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // ローディングメッセージを表示
         const loadingMessageId = 'loading-msg-' + Date.now();
         appendLoadingMessage(loadingMessageId);
+    
+        // 仮のユーザーIDを設定
+        const userId = 'anonymous_user';
 
         try {
             const response = await fetch(API_ENDPOINT, {
@@ -55,7 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: message }),
+                // user_idをリクエストボディに追加
+                body: JSON.stringify({ message: message, user_id: userId }),
             });
 
             if (!response.ok) {
