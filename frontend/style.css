@@ -1,0 +1,104 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  /* フォントの優先順を指定。Segoe UIがあれば使い、なければ次を使用 */
+    margin: 0;                             /* ページ全体の余白をゼロにする（デフォルト無効化） */
+    padding: 0;                            /* ページ全体の内側余白をゼロにする（デフォルト無効化） */
+    display: flex;                         /* 中身をFlexboxとして表示する */
+    justify-content: center;               /* 中身を水平方向の中央に配置 */
+    align-items: center;                   /* 中身を垂直方向の中央に配置 */
+    min-height: 100vh;                     /* 最低でも画面の高さ(100%)になるようにする */
+    background-color: #f0f2f5;           /* 背景色を薄いグレーに設定 */
+    color: #333;                         /* テキスト色を濃いグレーに設定 */
+}
+.chat-container {
+    width: 100%;                           /* 幅は親要素の100% */
+    max-width: 450px;                      /* 最大幅を450pxに制限（Webビューア内でのに安さ考慮）FileMaker ProのWebビューアのサイズに合わせて調整 */
+    height: 80vh;                          /* 高さを画面の80%に設定（vh = viewport height）FileMaker ProのWebビューアのサイズに合わせて調整 */
+    display: flex;                         /* Flexboxで中身を配置 */
+    flex-direction: column;                /* 要素を縦方向に並べる */
+    border: 1px solid #ddd;              /* 枠線を薄いグレーで設定 */
+    border-radius: 10px;                   /* 角を丸く（10px） */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* 影を付けて浮かせたように見せる */
+    overflow: hidden;                      /* 中身がはみ出たら隠す */
+    background-color: #fff;              /* 背景を白に設定 */
+}
+.chat-header {
+    background-color: #4CAF50;           /* ヘッダーの背景を緑に設定 */
+    color: white;                        /* テキストを白にする */
+    padding: 15px;                         /* 内側に余白15pxを設定 */
+    text-align: center;                    /* テキストを中央寄せ */
+    font-size: 1.2em;                      /* 少し大きめのフォントサイズに */
+    border-bottom: 1px solid #e0e0e0;    /* 下に薄い線を引く */
+}
+.chat-messages {
+    flex-grow: 1;                          /* 残りのスペースを全て使う */
+    padding: 15px;                         /* 内側に余白 */
+    overflow-y: auto;                      /* 縦スクロールが必要なら表示 */
+    display: flex;                         /* メッセージをflexboxで並べる */
+    flex-direction: column;                /* メッセージを縦に並べる */
+    gap: 10px;                             /* メッセージ同士の間隔を10pxに */
+    background-color: #e9ecef;           /* 背景を明るいグレーに */
+}
+.message {
+    display: flex;                         /* メッセージ全体をFlexboxにする */
+    font-size: 0.95em;                     /* 少し小さめの文字サイズにする */
+}
+.message.user {
+    justify-content: flex-end;             /* ユーザーのメッセージは右寄せにする */
+}
+.message.bot {
+    justify-content: flex-start;           /* ボットのメッセージを左寄せにする */
+}
+.message-content {
+    max-width: 75%;                        /* 幅の最大は75%に制限 */
+    padding: 10px 15px;                    /* 内側に縦10px 横15pxの余白 */
+    border-radius: 18px;                   /* 丸みのある角にする */
+    word-wrap: break-word;                 /* 単語が長いときは折り返す */
+    line-height: 1.4;                      /* 行間を少し広くする（読みやすく） */
+}
+.message.user .message-content {
+    background-color: #dcf8c6;           /* ユーザーの吹き出し色（明るい緑） */
+    color: #333;                         /* テキスト色はグレー */
+    border-bottom-right-radius: 2px;       /* 右下だけ角を小さくしてLINE風にする */
+}
+.message.bot .message-content {
+    background-color: #ffffff;           /* ボットの吹き出しは白 */
+    color: #333;                         /* テキスト色はグレー */
+    border: 1px solid #e0e0e0;           /* 薄い枠線を追加 */
+    border-bottom-left-radius: 2px;        /* 左下だけ角を小さくしてLINE風にする */
+}
+.chat-input-area {
+    display: flex;                         /* 入力欄とボタンを横並びに */
+    padding: 15px;                         /* 内側に余白 */
+    border-top: 1px solid #e0e0e0;       /* 上に境界線を引く */
+    background-color: #f0f2f5;           /* 入力エリアの背景色 */
+}
+#user-input {
+    flex-grow: 1;                          /* 幅をできるだけ広くとる */
+    padding: 10px 15px;                    /* 内側の余白 */
+    border: 1px solid #ccc;              /* 薄い枠線 */
+    border-radius: 20px;                   /* 丸みを持たせる */
+    font-size: 1em;                        /* 標準の文字サイズ */
+    margin-right: 10px;                    /* 右にボタンとの間隔を開ける */
+    outline: none;                         /* フォーカス時の外枠を消す */
+}
+#user-input:focus {
+    border-color: #4CAF50;               /* フォーカス時に枠色を緑にする */
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);  /* フォーカス時に薄い影を表示 */
+}
+#send-button {
+    background-color: #4CAF50;           /* 緑色のボタン */
+    color: white;                        /* 白いテキスト */
+    border: none;                          /* 枠線なし */
+    border-radius: 20px;                   /* 丸みを持たせる */
+    padding: 10px 20px;                    /* 内側の余白 */
+    cursor: pointer;                       /* ホバー時にポインターにする */
+    font-size: 1em;                        /* 標準の文字サイズ */
+    transition: background-color 0.3s ease;   /* ホバー時の色変化をなめらかに */
+}
+#send-button:hover {
+    background-color: #45a049;           /* ホバー時の色（濃い緑） */
+}
+#send-button:disabled { 
+    background-color: #a0a0a0;           /* 無効時はグレーに */
+    cursor: not-allowed;                   /* 無効時はポインターに斜線 */
+}
