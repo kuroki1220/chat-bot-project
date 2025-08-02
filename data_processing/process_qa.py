@@ -45,7 +45,7 @@ def get_embedding(text: str, max_retries: int = 5, delay: float = 2.0) -> list[f
     for attempt in range(1, max_retries + 1):
         try:
             response = genai.embed_content(
-                model="text-embedding-004",
+                model="models/embedding-001",
                 content=text,
                 task_type="retrieval_document"
             )

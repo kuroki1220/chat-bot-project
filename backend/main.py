@@ -11,19 +11,92 @@ import time
 from google.cloud import storage
 import pandas as pd
 
-# ロギング設定 (既存のbasicConfigは削除し、以下のロガー設定に統一)
-# logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s") # ★この行は削除またはコメントアウト★
+# ロギング設定
 logger = logging.getLogger(__name__)
-# ロガーハンドラが既に設定されていない場合のみ追加
 if not logger.handlers:
     handler = logging.StreamHandler()
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-logger.setLevel(logging.INFO) # ★INFOレベルのログも出力するように設定★
+logger.setLevel(logging.INFO)
+
+#=========================
+#ログデータベース設定
+#=========================
+#環境によってログDBのパスを切り替える
+if os.environ.get("K_SERVICE"):
+    # Cloud Run環境の場合
+    LOG_DB_DIR = os.path.join("/tmp", "db")
+else:
+    #ローカル環境の場合、プロジェクトルートのdbディレクトリに配置
+    LOG_DB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "db")
+LOG_DB_PATH = os.path.join(LOG_DB_DIR, "chatbot_logs.db")
+
+#=========================
+#関数の定義(init_log_dbとsave_query_logをここに移動)
+#=========================
+
+#=========================
+# init_log_db 関数
+#=========================
+def init_log_db():
+    """
+    問合せログを保存するためのSQLiteデータベースとテーブルを初期化する。
+    """
+    os.makedirs(LOG_DB_DIR, exist_ok=True)
+    logger.info(f"Log database directory created at {LOG_DB_DIR}")
+
+    conn = None
+    try:
+        conn = sqlite3.connect(LOG_DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS queries(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id TEXT NOT NULL,
+                query_text TEXT NOT NULL,
+                bot_response_text TEXT NOT NULL,
+                context_used TEXT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        conn.commit()
+        logger.info(f"Log database initialized at {LOG_DB_PATH}")
+    except sqlite3.Error as e:
+        logger.error(f"Error initializing log database: {e}", exc_info=True)
+        raise
+    finally:
+        if conn:
+            conn.close()
+
+#=========================
+# save_query_log 関数
+#=========================
+def save_query_log(user_id: str, query_text: str, bot_response_text: str, context_used: str = None):
+    """
+    ユーザーの問い合せ、ボットの応答、使用したコンテキストをデータベースに保存する。
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect(LOG_DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO queries (user_id, query_text, bot_response_text, context_used)
+            VALUES (?, ?, ?, ?)
+        """, (user_id, query_text, bot_response_text, context_used))
+        conn.commit()
+        logger.info(f"Query logged for user '{user_id}'.")
+    except sqlite3.Error as e:
+        logger.error(f"Error saving query log: {e}", exc_info=True)
+    finally:
+        if conn:
+            conn.close()
 
 # FastAPI アプリ
 app = FastAPI()
+
+#データベース初期化関数の呼び出し
+init_log_db() 
 
 # CORS設定
 app.add_middleware(
@@ -56,13 +129,6 @@ else:
 # ★修正: Dockerコンテナ内でのパスを/tmp/chroma_dbに固定★
 CHROMA_DB_PATH = "/tmp/chroma_db"
 COLLECTION_NAME = "internal_qa_collection_v2" # コレクション名はこれでOK
-
-#=========================
-#ログデータベース設定
-#=========================
-#Dockerコンテナ内では /tmp を利用し、その中に db ディレクトリを作成
-LOG_DB_DIR = os.path.join("/tmp", "db")
-LOG_DB_PATH = os.path.join(LOG_DB_DIR, "chatbot_logs.db")
 
 # ========================
 # GCSバケット名とパスの定義
@@ -141,7 +207,7 @@ def get_embedding(text: str, max_retries: int = 5, delay: float = 2.0) -> list[f
                 return []
 
             response = genai.embed_content(
-                model="text-embedding-004",
+                model="models/embedding-001",
                 content=text,
                 task_type="retrieval_document"
             )
@@ -167,62 +233,6 @@ def get_embedding(text: str, max_retries: int = 5, delay: float = 2.0) -> list[f
 
     logger.error("最大リトライ回数に達しました。埋め込み取得を中断します。")
     return []
-
-#=========================
-# init_log_db 関数
-#=========================
-def init_log_db():
-    """
-    問合せログを保存するためのSQLiteデータベースとテーブルを初期化する。
-    """
-    os.makedirs(LOG_DB_DIR, exist_ok=True)
-    logger.info(f"Log database directory created at {LOG_DB_DIR}")
-
-    conn = None
-    try:
-        conn = sqlite3.connect(LOG_DB_PATH)
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS queries(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id TEXT NOT NULL,
-                query_text TEXT NOT NULL,
-                bot_response_text TEXT NOT NULL,
-                context_used TEXT,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-        conn.commit()
-        logger.info(f"Log database initialized at {LOG_DB_PATH}")
-    except sqlite3.Error as e:
-        logger.error(f"Error initializing log database: {e}", exc_info=True)
-        raise
-    finally:
-        if conn:
-            conn.close()
-
-#=========================
-# save_query_log 関数
-#=========================
-def save_query_log(user_id: str, query_text: str, bot_reaponse_text: str, context_used: str = None):
-    """
-    ユーザーの問い合せ、ボットの応答、使用したコンテキストをデータベースに保存する。
-    """
-    conn = None
-    try:
-        conn = sqlite3.connect(LOG_DB_PATH)
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO queries (user_id, query_text, bot_response_text, context_used)
-            VALUES (?, ?, ?, ?)
-        """, (user_id, query_text, bot_response_text, context_used))
-        conn.commit()
-        logger.info(f"Query logged for user '{user_id}'.")
-    except sqlite3.Error as e:
-        logger.error(f"Error saving query log: {e}", exc_info=True)
-    finally:
-        if conn:
-            conn.close()
 
 # ========================
 # GeminiEmbeddingFunctionクラス（process_qa.pyからコピー）
@@ -262,25 +272,23 @@ async def read_root():
 async def chat_with_bot(request: ChatRequest):
     logger.info(f"[User: {request.user_id}] Message received: {request.message}")
 
+    bot_response = "" # bot_response変数をtryブロックの外で初期化
+    context = ""      # context変数をtryブロックの外で初期化
+    
     try:
         # ChromaDBからベクトル検索
-        # ★修正: ここでは既に初期化済みの qa_collection を使う★
-        # client = PersistentClient(path=CHROMA_DB_PATH) # この行は不要
-        # collection = client.get_or_create_collection(...) # この行も不要
-        
-        # ユーザーの質問を埋め込みに変換する
         query_embedding = get_embedding(request.message)
         if not query_embedding:
             raise ValueError("クエリの埋め込み生成に失敗しました。")
         
         # 明示的に生成した埋め込みを使ってクエリする
-        results = qa_collection.query( # ★qa_collection を使用★
+        results = qa_collection.query(
             query_embeddings=[query_embedding],
             n_results=3,
             include=["documents", "metadatas"]
         )
 
-        # ✅ 回答文だけを抽出してまとめる（類似回答3件）
+        # 回答文だけを抽出してまとめる（類似回答3件）
         if results and results.get("documents"):
             documents = results["documents"][0]
             context = "\n\n".join(f"- {doc}" for doc in documents)
@@ -289,8 +297,7 @@ async def chat_with_bot(request: ChatRequest):
             context = ""
             logger.info("ChromaDBに関連情報は見つかりませんでした。")
 
-        # ✅ Geminiプロンプト作成（要約＋自然な回答生成）
-        # Gemini APIキーが設定されていない場合は、Geminiモデルを使用しない
+        # Geminiプロンプト作成（要約＋自然な回答生成）
         if not GEMINI_API_KEY:
             bot_response = "申し訳ありませんが、Gemini APIキーが設定されていないため、現在AIによる応答ができません。"
             logger.warning("Gemini APIキーが設定されていないため、代替応答を返します。")
@@ -313,34 +320,27 @@ async def chat_with_bot(request: ChatRequest):
             bot_response = response.text.strip()
             logger.info(f"Gemini response: {bot_response}")
 
-            #問い合わせログをDBに保存
-            save_query_log(
-                user_id=request.user_id,
-                query_text=request.message,
-                bot_response_text=bot_response,
-                context_used=context  #コンテキスト変数も渡す
-            )
-
-        return {"response": bot_response}
-
     except Exception as e:
         logger.exception("Geminiチャット処理でエラーが発生しました。")
-        #エラー発生時でもログを試みる
+        bot_response = f"An internal server error occurred: {e}" # エラーメッセージをbot_responseに格納
+        
+        # ここに raise HTTPException を残します
+        raise HTTPException(status_code=500, detail=f"An internal server error occurred: {e}")
+    
+    finally:
+        # エラー発生時も、正常時も、必ずログを保存
         save_query_log(
             user_id=request.user_id,
             query_text=request.message,
-            bot_response_text=f"Error: {e}",
-            context_used=context if 'context' in locals() else "" # context変数が定義されていない場合も考慮
+            bot_response_text=bot_response,
+            context_used=context # contextはtryブロック内で初期化されているため、locals()チェックは不要
         )
-        raise HTTPException(status_code=500, detail=f"An internal server error occurred: {e}")
+    
+    # return は finally ブロックの直後に配置します
+    return {"response": bot_response}
 
 # Uvicorn起動（開発用）
 if __name__ == "__main__":
-    #ローカル環境のパス設定
-    if not os.environ.get("K_SERVICE"):
-        LOG_DB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "db")
-        LOG_DB_PATH = os.path.join(LOG_DB_DIR, "chatbot_logs.db")
-
     init_log_db() #データベース初期化関数の呼び出し
     
     import uvicorn

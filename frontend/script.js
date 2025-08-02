@@ -3,11 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
-    // 中間サーバーのエンドポイントURL (重要: 適切に設定してください)
-    // 開発環境では localhost でテストし、デプロイ後はサーバーのIPアドレスやドメインに変更します。
-    //const API_ENDPOINT = 'http://localhost:8000/chat'; 
-    //自分のCloud RunのService URLを記載
-    const API_ENDPOINT = 'https://chatbot-backend-219282880990.asia-northeast1.run.app/chat';
+    // 中間サーバーのエンドポイントURLを動的に設定
+    let API_ENDPOINT;
+    const currentHostname = window.location.hostname;
+
+    if (currentHostname == 'localhost' || currentHostname === '127.0.0.1'){
+        //ローカル環境の場合
+        API_ENDPOINT = 'http://localhost:8000/chat';
+        console.log("ローカル環境を検出しました。APIエンドポイント: " + API_ENDPOINT);
+    }else{
+        //Cloud Runなどのデプロイ環境の場合
+        //自分のCloud RunのService URLを記載
+        API_ENDPOINT = 'https://chatbot-backend-219282880990.asia-northeast1.run.app/chat';
+        console.log("デプロイ環境を検出しました。APIエンドポイント: " + API_ENDPOINT);
+    }
 
     // 初期メッセージを表示
     appendMessage('bot', 'こんにちは！どのようなご質問がありますか？');
