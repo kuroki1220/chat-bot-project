@@ -4,11 +4,16 @@ import matplotlib.pyplot as plt
 from collections import Counter
 import os
 import re
+
+#日本語フォントの設定
+plt.rcParams['font.family'] = 'Meiryo'
+plt.rcParams['axes.unicode_minus'] = False  #グラフのマイナス記号を正しく表示
+
 # import mecab #日本語の単語分割ライブラリ（オプション）
 
 #ログデータベースのパス
 #analyza_logs.pyはdata_processingディレクトリにあるため、プロジェクトルートのdbファイルを指す
-LOG_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..", "db", "chatbot_logs_db")
+LOG_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..", "db", "chatbot_logs.db")
 
 def get_query_logs():
     """
