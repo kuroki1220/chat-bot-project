@@ -100,3 +100,4 @@ websockets==15.0.1
 zipp==3.23.0
 google-cloud-storage
 matplotlib
+pytest
