@@ -127,8 +127,8 @@ COLLECTION_NAME = "internal_qa_collection_v2"
 # ========================
 # GCSバケット名とパスの定義
 # ========================
-GCS_BUCKET_NAME = "gemini-chatbot-project-465409-chroma-db-data" 
-GCS_DB_PREFIX = "chroma_db/" 
+GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "gemini-chatbot-project-v2-chroma-db-data") 
+GCS_DB_PREFIX = os.getenv("GCS_DB_PREFIX", "chroma_db/")
 
 if os.environ.get("K_SERVICE"):
     logger.info("Cloud Run環境を検出しました。ChromaDBデータをGCSからダウンロードします。")
@@ -138,6 +138,10 @@ if os.environ.get("K_SERVICE"):
 
         os.makedirs(CHROMA_DB_PATH, exist_ok=True)
         logger.info(f"ChromaDBダウンロード先ディレクトリ: {CHROMA_DB_PATH} を作成しました。")
+        
+        # 環境変数から読み込んだ直後に追加
+        logger.info(f"GCS_BUCKET_NAME (env): {GCS_BUCKET_NAME}")
+        logger.info(f"GCS_DB_PREFIX  (env): {GCS_DB_PREFIX}")
 
         blobs_found = False
         for blob in bucket.list_blobs(prefix=GCS_DB_PREFIX):
