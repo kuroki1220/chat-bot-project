@@ -17,7 +17,6 @@ class GeminiEmbeddingFunction(DefaultEmbeddingFunction):
 # ログ設定
 # ========================
 SHOW_EMBED_LOG = False
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -41,7 +40,7 @@ CHROMA_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", 
 def get_embedding(text: str, max_retries: int = 5, delay: float = 2.0) -> list[float]:
     if not text:
         return []
-
+    
     for attempt in range(1, max_retries + 1):
         try:
             response = genai.embed_content(
@@ -49,10 +48,10 @@ def get_embedding(text: str, max_retries: int = 5, delay: float = 2.0) -> list[f
                 content=text,
                 task_type="retrieval_document"
             )
-
+            
             if SHOW_EMBED_LOG:
                 logger.info(f"Geminiからの埋め込みレスポンス: {response}")
-
+                
             embedding = response.get("embedding")
             if not embedding:
                 embedding = response.get("data", [{}])[0].get("embedding")
@@ -60,7 +59,7 @@ def get_embedding(text: str, max_retries: int = 5, delay: float = 2.0) -> list[f
                     logger.error("埋め込みが取得できませんでした。レスポンス: %s", response)
                     return []
             return embedding
-
+        
         except Exception as e:
             error_message = str(e)
             if "429" in error_message or "quota" in error_message.lower():
@@ -70,7 +69,7 @@ def get_embedding(text: str, max_retries: int = 5, delay: float = 2.0) -> list[f
             else:
                 logger.exception(f"Gemini API埋め込み取得中にエラーが発生しました。テキスト: '{text[:50]}...'")
                 raise
-
+            
     logger.error("最大リトライ回数に達しました。埋め込み取得を中断します。")
     return []
 
@@ -84,9 +83,7 @@ def load_qa_data(file_path: str) -> pd.DataFrame:
             logger.error("CSVファイルに'質問'または'回答'の列が見つかりません。")
             raise ValueError("Required columns '質問' and '回答' not found in CSV.")
         df = df.dropna(subset=['質問', '回答'])
-
         logger.info(f"読み込んだQ&Aデータ数: {len(df)} 件")
-
         return df
     except FileNotFoundError:
         logger.error(f"ファイルが見つかりません: {file_path}")
@@ -101,68 +98,88 @@ def load_qa_data(file_path: str) -> pd.DataFrame:
 def process_and_store_qa_data(qa_file_path: str, collection_name: str = "internal_qa_collection"):
     logger.info(f"ChromaDBの保存先ディレクトリ: {CHROMA_DB_PATH}")
     os.makedirs(CHROMA_DB_PATH, exist_ok=True)
-
+    # デバッグ用: 読み込んだCSVの内容を確認
+    print("\n--- デバッグ情報：読み込んだqa_data.csvの内容 ---")
+    try:
+        qa_df = pd.read_csv(qa_file_path)
+        print(qa_df.head(10)) # 先頭10行を表示
+        print(f"\n合計件数: {len(qa_df)}")
+        print("-------------------------------------------\n")
+    except Exception as e:
+        print(f"ERROR: qa_data.csvの読み込み中にエラーが発生しました: {e}")
+        return
+    
     # ✅ Gemini埋め込み関数を使って ChromaDB コレクションを作成
     embedding_func = GeminiEmbeddingFunction()
-
+    
     client = PersistentClient(path=CHROMA_DB_PATH)
     collection = client.get_or_create_collection(
         name=collection_name,
         embedding_function=embedding_func
     )
     logger.info(f"ChromaDBコレクション '{collection_name}' を作成/取得しました。")
-
+    
+    # 既存データを削除して再構築
+    logger.info("既存のChromaDBデータを削除します。")
+    client.delete_collection(name=collection_name)
+    collection = client.get_or_create_collection(
+        name=collection_name,
+        embedding_function=embedding_func
+    )
+    logger.info("ChromaDBコレクションを再作成しました。")
+    
     try:
         qa_df = load_qa_data(qa_file_path)
-
+        
         documents = []
         metadatas = []
         embeddings = []
         ids = []
-
+        
         for index, row in qa_df.iterrows():
             question = str(row['質問'])
             answer = str(row['回答'])
+            
+            # ドキュメントに質問と回答の両方を含める
             combined_text = f"質問: {question}\n回答: {answer}"
-
+            
             embedding = get_embedding(combined_text)
-
+            
             if not embedding:
                 logger.warning(f"ベクトルが空です。質問: {question[:30]}... 回答: {answer[:30]}...")
                 logger.warning(f"ID '{index}' のデータで埋め込み生成に失敗しました。スキップします。")
             else:
-                logger.info(f"生成されたベクトルの長さ: {len(embedding)}")
-                documents.append(answer)
-                metadatas.append({"question": question, "source": qa_file_path, "row_id": index})
+                documents.append(combined_text) # ★ドキュメントに質問と回答を両方含める
+                metadatas.append({"question": question, "answer": answer, "source": qa_file_path, "row_id": index}) # メタデータに回答も保存
                 embeddings.append(embedding)
                 ids.append(f"qa_{index}")
-
-            time.sleep(1.0)  # 1秒待機（API制限対策）
-
+                
+            time.sleep(1.0) # 1秒待機（API制限対策）
+            
         if not documents:
             logger.warning("処理対象のQ&Aデータが見つかりませんでした。")
             return
-
+        
         logger.info("collection.add を実行します。")
         start_time = time.time()
-
+        
         collection.add(
             embeddings=embeddings,
             documents=documents,
             metadatas=metadatas,
             ids=ids
         )
-
+        
         elapsed = time.time() - start_time
         logger.info(f"collection.add 実行完了（所要時間: {elapsed:.2f}秒）")
-
+        
         logger.info(f"ChromaDBに {len(documents)} 件のQ&Aデータを正常に保存しました。")
         logger.info("✅ collection.add 実行後の確認ログ：保存は最後まで到達しました。")
-
+        
     except Exception as e:
         logger.exception("Q&Aデータの処理と保存中に予期せぬエラーが発生しました。")
         raise
-
+    
 # ========================
 # スクリプトの実行
 # ========================
@@ -170,10 +187,10 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.join(script_dir, "..")
     CHROMA_DB_PATH = os.path.join(project_root, "chroma_db")
-
+    
     qa_csv_path = os.path.join(script_dir, "qa_data.csv")
     logger.info(f"Q&A CSVパス: {qa_csv_path}")
-
+    
     try:
         # ここでコレクション名を変更可能に
         process_and_store_qa_data(qa_csv_path, collection_name="internal_qa_collection_v2")
