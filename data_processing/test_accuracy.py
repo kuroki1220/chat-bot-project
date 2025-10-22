@@ -1,4 +1,3 @@
-# data_processing/test_accuracy.py
 import os
 import re
 import time
@@ -66,6 +65,8 @@ def main(limit: int, threshold: float, sleep_sec: float):
     results = []
     correct = 0
 
+    start_time = time.time()  # テスト開始時刻を記録
+
     for idx, row in qa_df.iterrows():
         q = str(row["質問"]).strip()
         expected = str(row["回答"]).strip()
@@ -110,8 +111,30 @@ def main(limit: int, threshold: float, sleep_sec: float):
     df.to_csv(out_path_ts, index=False, encoding="utf-8-sig")
     df.to_csv(out_path_latest, index=False, encoding="utf-8-sig")
 
-    acc = round(correct / len(df), 3) if len(df) else 0.0
-    print(f"\n✅ 完了: {len(df)}件 / 正解 {correct}件 / 正答率 {acc}")
+    # 正答率計算（パーセント表示）
+    acc = round(correct / len(df) * 100, 1) if len(df) else 0.0
+    print(f"\n✅ 完了: {len(df)}件 / 正解 {correct}件 / 正答率 {acc}%")
+    
+    # 経過時間表示
+    end_time = time.time()  # テスト終了時刻を記録
+    elapsed_time = end_time - start_time  # 経過時間（秒）
+    
+    # 経過時間を分・秒・時間の組み合わせで表示
+    minutes = int(elapsed_time // 60)
+    seconds = int(elapsed_time % 60)
+    hours = int(minutes // 60)
+    minutes = minutes % 60
+
+    elapsed_time_str = ""
+    if hours > 0:
+        elapsed_time_str += f"{hours}h"
+    if minutes > 0:
+        elapsed_time_str += f"{minutes}m"
+    if seconds > 0:
+        elapsed_time_str += f"{seconds}s"
+
+    print(f"⏳ 時間: {elapsed_time_str}")  # 経過時間を表示
+
     print(f"🗂 履歴ファイル: {out_path_ts}")
     print(f"📌 最新ファイル: {out_path_latest}")
 
