@@ -130,6 +130,11 @@ COLLECTION_NAME = "internal_qa_collection_v2"
 GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "gemini-chatbot-project-v2-chroma-db-data") 
 GCS_DB_PREFIX = os.getenv("GCS_DB_PREFIX", "chroma_db/")
 
+#Cloud Run環境なら強制上書き
+if os.environ.get("K_SERVICE"):
+    GCS_BUCKET_NAME = "gemini-chatbot-project-v2-chroma-db-data"
+    logger.info("Cloud Run環境を検出。バケット名を強制設定しました。")
+
 if os.environ.get("K_SERVICE"):
     logger.info("Cloud Run環境を検出しました。ChromaDBデータをGCSからダウンロードします。")
     try:
