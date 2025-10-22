@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }else{
         //Cloud Runなどのデプロイ環境の場合
         //自分のCloud RunのService URLを記載
-        API_ENDPOINT = 'https://chatbot-backend-219282880990.asia-northeast1.run.app/chat';
+        API_ENDPOINT = 'https://chatbot-backend-445070682859.asia-northeast1.run.app/chat';
         console.log("デプロイ環境を検出しました。APIエンドポイント: " + API_ENDPOINT);
     }
 
