@@ -317,22 +317,36 @@ async def chat_with_bot(request: ChatRequest):
         unique_answers = list(dict.fromkeys(all_answers))[:5]
         context = "\n\n".join(f"- {pair}" for pair in unique_answers)
         logger.info(f"検索結果（質問+回答ペア）:\n{context}")
-
-        
+ 
         if not context.strip():
             logger.info("ChromaDBに関連情報は見つかりませんでした。")
-            bot_response = "申し訳ありませんが、その質問に対する関連情報が見つかりませんでした。他のキーワードでお試しください。"
+            # AIが回答を生成
+            model = genai.GenerativeModel(model_name="models/gemini-2.5-pro")
+            prompt = f"""
+あなたは社内のサポート用チャットボットです。
+ユーザーの質問に対して、できる限り自分の知識で簡潔かつ丁寧に回答してください。
+必要であれば一般的な知識を使って補足しても構いません。
+
+### ユーザーの質問
+{request.message}
+
+### あなたの返答（丁寧に自然な言い回しで）
+"""
+            response = model.generate_content(prompt)
+            bot_response = response.text.strip()
+
         else:
             logger.info(f"検索結果（回答文）:\n{context}")
             
-            # Geminiプロンプト作成（要約＋自然な回答生成）
+            # Geminiプロンプト作成（要約 + 自然な回答生成）
             final_answer_model = genai.GenerativeModel(model_name="models/gemini-2.5-pro")
             prompt = f"""
 あなたは社内のサポート用チャットボットです。
 ユーザーの質問に対して、以下の【参考情報】を基に、簡潔かつ丁寧に回答してください。
 
-- 【参考情報】に回答がない場合は、「申し訳ありませんが、その質問に対する関連情報が見つかりませんでした。他のキーワードでお試しください。
-- 質問に回答する際、コンテキストにある情報以外のことを付け足してはいけません。
+- 【参考情報】の内容が質問に全く関連しない場合は、その情報を使わず、一般知識に基づいて回答を試みてください。
+- もし一般知識でも回答が困難な場合は、情報が見つからなかったことを丁寧に伝えてください
+- 質質問に回答する際、コンテキストにある情報以外のことを付け足しても構いませんが、まずは【参考情報】の内容を最優先してください。
 - 丁寧な言葉遣いで回答してください。
 
 ### ユーザーの質問
@@ -345,9 +359,9 @@ async def chat_with_bot(request: ChatRequest):
 """
             response = final_answer_model.generate_content(prompt)
             bot_response = response.text.strip()
-            
+
             logger.info(f"Gemini response: {bot_response}")
-            
+
     except Exception as e:
         logger.exception("Geminiチャット処理でエラーが発生しました。")
         bot_response = f"An internal server error occurred: {e}"
