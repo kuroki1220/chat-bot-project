@@ -141,7 +141,7 @@ def main(limit: int, threshold: float, sleep_sec: float):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int, default=10, help="テスト件数（先頭から）")
-    parser.add_argument("--threshold", type=float, default=0.6, help="正解判定のスコア閾値")
+    parser.add_argument("--threshold", type=float, default=0.7, help="正解判定のスコア閾値")
     parser.add_argument("--sleep", type=float, default=0.5, help="API呼び出しのインターバル秒")
     args = parser.parse_args()
     main(args.limit, args.threshold, args.sleep)
