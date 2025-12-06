@@ -32,7 +32,8 @@ genai.configure(api_key=api_key)
 # ========================
 # ChromaDB保存先
 # ========================
-CHROMA_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "chroma_db")
+CHROMA_DB_PATH = r"C:\開発\社内用チャットボット\chat-bot-system\chroma_db"
+
 
 # ========================
 # 埋め込み取得関数
@@ -79,12 +80,25 @@ def get_embedding(text: str, max_retries: int = 5, delay: float = 2.0) -> list[f
 def load_qa_data(file_path: str) -> pd.DataFrame:
     try:
         df = pd.read_csv(file_path)
-        if '質問' not in df.columns or '回答' not in df.columns:
-            logger.error("CSVファイルに'質問'または'回答'の列が見つかりません。")
-            raise ValueError("Required columns '質問' and '回答' not found in CSV.")
-        df = df.dropna(subset=['質問', '回答'])
+        # ---- 新旧どちらの列名にも対応させる ----
+        #（旧）日本語版:「質問」「回答」
+        #（新）英語版：「question」「answer_internal」
+        if '質問' in df.columns and '回答' in df.columns:
+            question_col = '質問'
+            answer_col = '回答'
+        elif 'question' in df.columns and ('answer_internal' in df.columns or 'answer' in df.columns):  # ← colimns → columns に修正
+            question_col = 'question'
+            answer_col = 'answer_internal' if 'answer_internal' in df.columns else 'answer'
+        else:
+            logger.error("CSVファイルに質問・回答の列が見つかりません。")
+            logger.error(f"検出された列: {list(df.columns)}")
+            raise ValueError("Required columns ('質問', '回答') または ('question', 'answer_internal') が見つかりません。")
+
+        df = df.dropna(subset=[question_col, answer_col])
+        logger.info(f"使用カラム: 質問={question_col}, 回答={answer_col}")
         logger.info(f"読み込んだQ&Aデータ数: {len(df)} 件")
-        return df
+        # ✅ 修正ポイント：この関数内で定義したカラム名を返す
+        return df, question_col, answer_col  # ← 修正！
     except FileNotFoundError:
         logger.error(f"ファイルが見つかりません: {file_path}")
         raise
@@ -98,7 +112,7 @@ def load_qa_data(file_path: str) -> pd.DataFrame:
 def process_and_store_qa_data(qa_file_path: str, collection_name: str = "internal_qa_collection"):
     logger.info(f"ChromaDBの保存先ディレクトリ: {CHROMA_DB_PATH}")
     os.makedirs(CHROMA_DB_PATH, exist_ok=True)
-    # デバッグ用: 読み込んだCSVの内容を確認
+
     print("\n--- デバッグ情報：読み込んだqa_data.csvの内容 ---")
     try:
         qa_df = pd.read_csv(qa_file_path)
@@ -129,7 +143,8 @@ def process_and_store_qa_data(qa_file_path: str, collection_name: str = "interna
     logger.info("ChromaDBコレクションを再作成しました。")
     
     try:
-        qa_df = load_qa_data(qa_file_path)
+        # ✅ 修正ポイント：load_qa_data から3つの値を受け取る
+        qa_df, question_col, answer_col = load_qa_data(qa_file_path)
         
         documents = []
         metadatas = []
@@ -137,24 +152,32 @@ def process_and_store_qa_data(qa_file_path: str, collection_name: str = "interna
         ids = []
         
         for index, row in qa_df.iterrows():
-            question = str(row['質問'])
-            answer = str(row['回答'])
+            question = str(row[question_col])
+            answer = str(row[answer_col])
             
-            # ドキュメントに質問と回答の両方を含める
-            combined_text = f"質問: {question}\n回答: {answer}"
-            
-            embedding = get_embedding(combined_text)
-            
+            # ★埋め込みは「質問」だけで作る（検索の当たりを良くする）
+            doc_text = question
+
+            embedding = get_embedding(doc_text)
             if not embedding:
-                logger.warning(f"ベクトルが空です。質問: {question[:30]}... 回答: {answer[:30]}...")
-                logger.warning(f"ID '{index}' のデータで埋め込み生成に失敗しました。スキップします。")
+                ...
             else:
-                documents.append(combined_text) # ★ドキュメントに質問と回答を両方含める
-                metadatas.append({"question": question, "answer": answer, "source": qa_file_path, "row_id": index}) # メタデータに回答も保存
+                documents.append(doc_text)
+                metadatas.append({
+                    "question": question,
+                    "answer": answer,
+                    "source": qa_file_path,
+                    "row_id": index,
+                    # もしCSVに answer_id/intent/tags/audience があるなら併せて入れる
+                    **({ "answer_id": str(row.get("answer_id")) } if "answer_id" in qa_df.columns else {}),
+                    **({ "intent": str(row.get("intent")) } if "intent" in qa_df.columns else {}),
+                    **({ "tags": str(row.get("tags")) } if "tags" in qa_df.columns else {}),
+                    **({ "audience": str(row.get("audience")) } if "audience" in qa_df.columns else {}),
+                })
                 embeddings.append(embedding)
                 ids.append(f"qa_{index}")
                 
-            time.sleep(1.0) # 1秒待機（API制限対策）
+            time.sleep(1.0) # API制限対策
             
         if not documents:
             logger.warning("処理対象のQ&Aデータが見つかりませんでした。")
@@ -172,27 +195,25 @@ def process_and_store_qa_data(qa_file_path: str, collection_name: str = "interna
         
         elapsed = time.time() - start_time
         logger.info(f"collection.add 実行完了（所要時間: {elapsed:.2f}秒）")
-        
         logger.info(f"ChromaDBに {len(documents)} 件のQ&Aデータを正常に保存しました。")
         logger.info("✅ collection.add 実行後の確認ログ：保存は最後まで到達しました。")
         
     except Exception as e:
         logger.exception("Q&Aデータの処理と保存中に予期せぬエラーが発生しました。")
         raise
-    
+
 # ========================
 # スクリプトの実行
 # ========================
 if __name__ == "__main__":
+    
+    # ★★★ 修正：script_dir を再定義 ★★★
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.join(script_dir, "..")
-    CHROMA_DB_PATH = os.path.join(project_root, "chroma_db")
     
     qa_csv_path = os.path.join(script_dir, "qa_data.csv")
     logger.info(f"Q&A CSVパス: {qa_csv_path}")
     
     try:
-        # ここでコレクション名を変更可能に
         process_and_store_qa_data(qa_csv_path, collection_name="internal_qa_collection_v2")
         logger.info("Q&Aデータのベクトルデータベースへの保存が完了しました。")
     except Exception as e:
