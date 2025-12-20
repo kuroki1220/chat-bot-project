@@ -43,14 +43,16 @@ def semantic_score(text1: str, text2: str) -> float:
     sim = cosine_similarity(emb1.cpu().numpy(), emb2.cpu().numpy())[0][0]
     return round(float(sim), 3)
 
-def main(limit: int, threshold: float, sleep_sec: float):
+def main(start: int, limit: int, threshold: float, sleep_sec: float):
     # ===== データ読み込み =====
     qa_df = pd.read_csv(QA_CSV_PATH)
     if "質問" not in qa_df.columns or "回答" not in qa_df.columns:
         raise ValueError("CSVに「質問」「回答」列が必要です")
     qa_df = qa_df.dropna(subset=["質問", "回答"])
-    if limit:
-        qa_df = qa_df.head(limit)
+    start_idx = max(start - 1, 0)   # 1始まり → 0始まり
+    end_idx = start_idx + limit
+
+    qa_df = qa_df.iloc[start_idx:end_idx]
 
     print(f"📄 Q&Aデータ {len(qa_df)} 件をテストします（閾値 {threshold}）")
 
@@ -140,8 +142,10 @@ def main(limit: int, threshold: float, sleep_sec: float):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--limit", type=int, default=10, help="テスト件数（先頭から）")
+    parser.add_argument("--start", type=int, default=1, help="テスト開始番号（1始まり）")
+    parser.add_argument("--limit", type=int, default=10, help="テスト件数")
     parser.add_argument("--threshold", type=float, default=0.7, help="正解判定のスコア閾値")
     parser.add_argument("--sleep", type=float, default=0.5, help="API呼び出しのインターバル秒")
     args = parser.parse_args()
-    main(args.limit, args.threshold, args.sleep)
+
+    main(args.start, args.limit, args.threshold, args.sleep)
