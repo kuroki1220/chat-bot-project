@@ -119,12 +119,12 @@ else:
 CHROMA_DB_PATH = r"C:\開発\社内用チャットボット\chat-bot-system\chroma_db"
 COLLECTION_NAME = "internal_qa_collection_v2"
 
-GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "gemini-chatbot-project-v2-chroma-db-data")
+GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "gemini-chatbot-project-v3-chroma-db-data")
 GCS_DB_PREFIX = os.getenv("GCS_DB_PREFIX", "chroma_db/")
 
 # Cloud Run ならバケット名を強制
 if os.environ.get("K_SERVICE"):
-    GCS_BUCKET_NAME = "gemini-chatbot-project-v2-chroma-db-data"
+    GCS_BUCKET_NAME = "gemini-chatbot-project-v3-chroma-db-data"
     logger.info("Cloud Run環境を検出。バケット名を強制設定しました。")
 
 if os.environ.get("K_SERVICE"):
