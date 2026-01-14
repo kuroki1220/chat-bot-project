@@ -127,7 +127,7 @@ COLLECTION_NAME = "internal_qa_collection_v2"
 
 GCS_DB_PREFIX = os.getenv("GCS_DB_PREFIX", "chroma_db/")
 
-GCS_BUCKET_NAME = "gemini-chatbot-project-v3-chroma-db-data"
+GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
 if os.environ.get("K_SERVICE"):
     # Cloud Runでは必須（プロジェクト移行で事故らない）
     if not GCS_BUCKET_NAME:
