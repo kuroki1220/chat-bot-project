@@ -102,3 +102,23 @@ body {
     background-color: #a0a0a0;           /* 無効時はグレーに */
     cursor: not-allowed;                   /* 無効時はポインターに斜線 */
 }
+
+.options-wrap{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.option-button{
+    border: 1px solid #4CAF50;
+    background: #fff;
+    color: #4CAF50;
+    border-radius: 16px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.95em;
+}
+
+.option-button:hover{
+    background: rgba(76, 175, 80, 0.08);
+}

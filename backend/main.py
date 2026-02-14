@@ -8,6 +8,8 @@ import google.generativeai as genai
 from chromadb import PersistentClient
 from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 import time
+import csv
+from typing import Optional
 from google.cloud import storage
 
 # ロギング設定
@@ -181,6 +183,11 @@ else:
     CHROMA_DB_PATH = local_chroma_path
     logger.info("ローカル環境を検出しました。ローカルのChromaDBデータを使用します。")
 
+# =========================
+# Scenario CSV 設定
+# =========================
+SCENARIO_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scenarios")
+SCENARIO_FEE_PATH = os.path.join(SCENARIO_DIR, "scenario_fee.csv")
 
 # =========================
 # 埋め込み取得
@@ -241,6 +248,60 @@ except Exception as e:
     logger.error(f"ChromaDBコレクションの初期化に失敗しました: {e}", exc_info=True)
     raise RuntimeError(f"Failed to initialize ChromaDB collection: {e}")
 
+# =========================
+# Scenario ローダー
+# =========================
+def load_scenario_csv(path: str):
+    """
+    CSVを読み込み、node_id -> node辞書 と parent_id -> children配列 を返す
+    """
+    if not os.path.exists(path):
+        logger.warning(f"Scenario CSV not found: {path}")
+        return {}, {}
+    
+    nodes = {}
+    children = {}
+    
+    with open(path, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            node_id = (row.get("node_id") or "").strip()
+            parent_id = (row.get("parent_id") or "").strip()
+            label = (row.get("label") or "").strip()
+            node_type = (row.get("node_type") or "").strip() # category / answer
+            answer = (row.get("answer") or "").strip()
+            
+            if not node_id:
+                continue
+            
+            nodes[node_id] = {
+                "node_id": node_id,
+                "parent_id": parent_id,
+                "label": label,
+                "node_type": node_type,
+                "answer": answer,
+            }
+            children.setdefault(parent_id, []).append(node_id)
+            
+    return nodes, children
+
+SC_FEE_NODES, SC_FEE_CHILDREN = load_scenario_csv(SCENARIO_FEE_PATH)
+
+def make_options(node_ids, nodes, action="select"):
+    opts = []
+    for nid in node_ids:
+        n = nodes.get(nid)
+        if not n:
+            continue
+        opts.append({"id": nid, "label": n["label"], "action": action})
+    return opts
+
+def nav_options():
+    return [
+        {"id": "__back__", "label": "戻る", "action": "nav"},
+        {"id": "__home__", "label": "最初に戻る", "action": "nav"},
+        {"id": "__end__", "label": "終了", "action": "nav"}
+    ]
 
 # =========================
 # 共通：DB検索ヘルパー
@@ -376,6 +437,93 @@ class ChatRequest(BaseModel):
 async def read_root():
     return {"message": "Chatbot backend is running."}
 
+@app.get("/init")
+async def init_chat():
+    # root配下（大カテゴリ）を返す
+    root_children = SC_FEE_CHILDREN.get("root", [])
+    
+    text = "私はスリム光 社内用チャットボットのチャッピーです。\n何が知りたいですか？"
+    options = make_options(root_children, SC_FEE_NODES, action="select") + nav_options()
+    
+    return {
+        "response": text,
+        "options": options,
+        "ui": {"mode": "scenario", "scenario": "fee", "path": ["root"]},
+    }
+    
+class ScenarioSelectRequest(BaseModel):
+    node_id: str
+    path: list[str] = ["root"] # フロントが保持して送る
+    user_id: str = "anonymous"
+    
+@app.post("/scenario/select")
+async def scenario_select(req: ScenarioSelectRequest):
+    node_id = req.node_id
+    
+    #ナビゲーション
+    if node_id == "__end__":
+        return {"response": "終了しました。", "options": [], "ui": {"mode": "scenario", "ended": True}}
+    
+    if node_id == "__home__":
+        root_children = SC_FEE_CHILDREN.get("root", [])
+        return {
+            "response": "何が知りたいですか？",
+            "options": make_options(root_children, SC_FEE_NODES, action="select") + nav_options(),
+            "ui": {"mode": "scenario", "scenario": "fee", "path": ["root"]},
+        }
+        
+    if node_id == "__back__":
+        # pathが ["root","fee","fee_initial"] の場合 → 親に戻す
+        # 1つ戻した先の子を出す
+        path = req.path[:] if req.path else ["root"]
+        if len(path) <= 1:
+            root_children = SC_FEE_CHILDREN.get("root", [])
+            return {
+                "response": "何が知りたいですか？",
+                "options": make_options(root_children, SC_FEE_NODES, action="select") + nav_options(),
+                "ui": {"mode": "scenario", "scenario": "fee", "path": ["root"]},
+            }
+        # 戻り先
+        path = path[:-1]
+        current = path[-1]
+        kids = SC_FEE_CHILDREN.get(current, [])
+        prompt = SC_FEE_NODES.get(current, {}).get("label") or "選択してください"
+        return {
+            "response": prompt,
+            "options": make_options(kids, SC_FEE_NODES, action="select") + nav_options(),
+            "ui": {"mode": "scenario", "scenario": "fee", "path": path},
+        }
+        
+    # 通常ノード
+    node = SC_FEE_NODES.get(node_id)
+    if not node:
+        return {"response": "該当する項目が見つかりませんでした。", "options": nav_options(), "ui": {"mode": "scenario"}}
+    
+    # path更新（フロントが送るpathを信じる簡易版）
+    new_path = (req.path[:] if req.path else ["root"]) + [node_id]
+    
+    if node["node_type"] == "answer":
+        # 回答表示（最後もナビボタンを出す）
+        return {
+            "response": node["answer"],
+            "options": nav_options(),
+            "ui": {"mode": "scenario", "scenario": "fee", "path": new_path},
+        }
+        
+    # category → 子を提示
+    kids = SC_FEE_CHILDREN.get(node_id, [])
+    if not kids:
+        return {
+            "response": "このカテゴリにはまだ項目がありません。",
+            "options": nav_options(),
+            "ui": {"mode": "scenario", "scenario": "fee", "path": new_path},
+        }
+        
+    return {
+        "response": f"{node['label']}：どれですか？",
+        "options": make_options(kids, SC_FEE_NODES, action="select") + nav_options(),
+        "ui": {"mode": "scenario", "scenario": "fee", "path": new_path},
+    }
 
 @app.post("/chat")
 async def chat_with_bot(request: ChatRequest):

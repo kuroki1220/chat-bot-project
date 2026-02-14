@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
+    let scenarioPath = ["root"]; //バックエンドに渡すパス
+
     // 中間サーバーのエンドポイントURLを動的に設定
     let API_ENDPOINT;
     const currentHostname = window.location.hostname;
@@ -18,8 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("デプロイ環境を検出しました。APIエンドポイント: " + API_ENDPOINT);
     }
 
-    // 初期メッセージを表示
-    appendMessage('bot', 'こんにちは！どのようなご質問がありますか？');
+    initScenario();
 
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
@@ -41,6 +42,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 最新のメッセージが見えるようにスクロール
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function initScenario() {
+        try {
+            const res = await fetch(API_ENDPOINT.replace('/chat', '/init'));
+            const data = await res.json();
+
+            appendMessage('bot', data.response);
+            if (data.ui && data.ui.path) scenarioPath = data.ui.path;
+
+            appendOptions(data.options);
+        } catch (e) {
+            console.error("init failed", e);
+            appendMessage('bot', '初期化に失敗しました。ページを再読み込みしてください。');
+        }
+    }
+
+    async function sendScenarioSelect(nodeId) {
+        // 入力を無効化 (連打防止)
+        sendButton.disabled = true;
+        userInput.disabled = true;
+
+        const loadingMessageId = 'loading-msg-' + Date.now();
+        appendLoadingMessage(loadingMessageId);
+
+        const userId = 'anonymous_user';
+
+        try {
+            const res = await fetch(API_ENDPOINT.replace('/chat', '/scenario/select'), {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    node_id: nodeId,
+                    path: scenarioPath,
+                    user_id: userId
+                })
+            });
+
+            const data = await res.json();
+            removeLoadingMessage(loadingMessageId);
+
+            appendMessage('bot', data.response);
+
+            if (data.ui && data.ui.path) scenarioPath = data.ui.path;
+
+            appendOptions(data.options);
+        } catch (e) {
+            console.error("scenario select failed", e);
+            removeLoadingMessage(loadingMessageId);
+            appendMessage('bot', 'エラーが発生しました。もう一度お試しください。');
+        } finally {
+            sendButton.disabled = false;
+            userInput.disabled = false;
+            userInput.focus();
+        }
     }
 
     async function sendMessage() {
@@ -89,6 +145,47 @@ document.addEventListener('DOMContentLoaded', () => {
             userInput.disabled = false; // 入力フィールドを有効化
             userInput.focus(); // 入力フィールドにフォーカスを戻す
         }
+    }
+
+    function appendOptions(options) {
+        if (!options || options.length === 0) return;
+
+        const wrap = document.createElement('div');
+        wrap.classList.add('options-wrap');
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.classList.add('option-button');
+            btn.textContent = opt.label;
+
+            btn.addEventListener('click', () => {
+                // クリックした文言をユーザー吹き出しに出す
+                appendMessage('user', opt.label);
+
+                // nav系の押下の場合は path を送る
+                if (opt.action === 'nav') {
+                    sendScenarioSelect(opt.id);
+                    return;
+                }
+
+                // category/answer 選択
+                sendScenarioSelect(opt.id);
+            });
+
+            wrap.appendChild(btn);
+        });
+
+        // ボット側メッセージとして表示する（左寄せに合わせたいので message.bot を付ける）
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', 'bot');
+
+        const contentElement = document.createElement('div');
+        contentElement.classList.add('message-content');
+        contentElement.appendChild(wrap);
+
+        messageElement.appendChild(contentElement);
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     // ローディングメッセージの表示
