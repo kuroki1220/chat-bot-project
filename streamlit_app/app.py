@@ -40,6 +40,11 @@ if "initialized" not in st.session_state:
 
 USER_ID = "anonymous_user"
 
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [
+        {"role": "bot", "text": "私はスリム光社内用チャットボットのチャッピーです。何が知りたいですか？"}
+    ]
+
 # ==========
 # 表示関数
 # ==========
@@ -50,11 +55,20 @@ def user_say(text: str):
     st.session_state.messages.append({"role": "user", "text": text})
 
 def render_chat():
-    for m in st.session_state.messages:
-        if m["role"] == "bot":
-            st.chat_message("assistant").write(m["text"])
+    msgs = st.session_state.get("messages", [])
+    for m in msgs:
+        # m が dict じゃないケースも吸収
+        if isinstance(m, dict):
+            role = m.get("role", "bot")
+            text = m.get("text", "")
         else:
-            st.chat_message("user").write(m["text"])
+            role = "bot"
+            text = str(m)
+
+        if role == "bot":
+            bot_say(text)
+        else:
+            user_say(text)
 
 # ==========
 # API呼び出し（エラー詳細を表示）
