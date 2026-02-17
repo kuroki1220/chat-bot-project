@@ -203,7 +203,7 @@ def get_embedding(text: str, task_type: str, max_retries: int = 5, delay: float 
     for attempt in range(1, max_retries + 1):
         try:
             response = genai.embed_content(
-                model="models/embedding-001",
+                model="models/gemini-embedding-001",
                 content=text,
                 task_type=task_type,
             )
