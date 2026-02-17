@@ -1,87 +1,164 @@
-import streamlit as st
+import os
 import requests
-
-# Cloud Run のベースURL（末尾 /chat じゃなくてサービスのルート）
-BASE_URL = st.secrets.get("BASE_URL", "https://chatbot-backend-140594287961.asia-northeast1.run.app")
-
-INIT_URL = f"{BASE_URL}/init"
-SELECT_URL = f"{BASE_URL}/scenario/select"
-CHAT_URL = f"{BASE_URL}/chat"
+import streamlit as st
 
 st.set_page_config(page_title="社内チャットボット", layout="centered")
-st.title("社内チャットボット")
 
+# ==========
+# 設定（Streamlit Secrets → なければ環境変数）
+# ==========
+BASE_URL = None
+if "CHAT_BASE_URL" in st.secrets:
+    BASE_URL = st.secrets["CHAT_BASE_URL"]
+else:
+    BASE_URL = os.getenv("CHAT_BASE_URL", "")
+
+BASE_URL = (BASE_URL or "").rstrip("/")
+
+if not BASE_URL:
+    st.error("CHAT_BASE_URL が未設定です。Manage app → Settings → Secrets に設定してください。")
+    st.stop()
+
+INIT_URL = f"{BASE_URL}/init"
+SCENARIO_SELECT_URL = f"{BASE_URL}/scenario/select"
+CHAT_URL = f"{BASE_URL}/chat"
+
+# ==========
+# state 初期化
+# ==========
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = []  # [{"role":"bot/user","text":"..."}]
+
 if "scenario_path" not in st.session_state:
     st.session_state.scenario_path = ["root"]
-if "options" not in st.session_state:
-    st.session_state.options = []
 
-def bot_say(text):
-    st.session_state.messages.append(("bot", text))
+if "scenario_options" not in st.session_state:
+    st.session_state.scenario_options = []
 
-def user_say(text):
-    st.session_state.messages.append(("user", text))
+if "initialized" not in st.session_state:
+    st.session_state.initialized = False
 
-def init():
-    r = requests.get(INIT_URL, timeout=30)
-    r.raise_for_status()
-    data = r.json()
+USER_ID = "anonymous_user"
+
+# ==========
+# 表示関数
+# ==========
+def bot_say(text: str):
+    st.session_state.messages.append({"role": "bot", "text": text})
+
+def user_say(text: str):
+    st.session_state.messages.append({"role": "user", "text": text})
+
+def render_chat():
+    for m in st.session_state.messages:
+        if m["role"] == "bot":
+            st.chat_message("assistant").write(m["text"])
+        else:
+            st.chat_message("user").write(m["text"])
+
+# ==========
+# API呼び出し（エラー詳細を表示）
+# ==========
+def call_json(method: str, url: str, payload=None, timeout=30):
+    try:
+        if method == "GET":
+            r = requests.get(url, timeout=timeout)
+        else:
+            r = requests.post(url, json=payload, timeout=timeout)
+
+        # 失敗時に本文を表示できるようにする
+        if not r.ok:
+            return {"__error__": True, "status": r.status_code, "text": r.text}
+
+        return r.json()
+    except Exception as e:
+        return {"__error__": True, "status": "EXCEPTION", "text": str(e)}
+
+# ==========
+# 初期化（/init）
+# ==========
+def init_scenario():
+    data = call_json("GET", INIT_URL)
+
+    if data.get("__error__"):
+        bot_say("初期化に失敗しました。")
+        st.error(f"INITエラー: {data.get('status')} / {data.get('text')}")
+        return
+
     bot_say(data.get("response", ""))
-    st.session_state.options = data.get("options", [])
     ui = data.get("ui") or {}
     if ui.get("path"):
         st.session_state.scenario_path = ui["path"]
 
-def scenario_select(node_id, label):
+    st.session_state.scenario_options = data.get("options", [])
+    st.session_state.initialized = True
+
+# ==========
+# シナリオ選択（/scenario/select）
+# ==========
+def scenario_select(node_id: str, label: str):
     user_say(label)
+
     payload = {
         "node_id": node_id,
         "path": st.session_state.scenario_path,
-        "user_id": "anonymous_user"
+        "user_id": USER_ID,
     }
-    r = requests.post(SELECT_URL, json=payload, timeout=30)
-    r.raise_for_status()
-    data = r.json()
+    data = call_json("POST", SCENARIO_SELECT_URL, payload)
+
+    if data.get("__error__"):
+        bot_say("シナリオ処理でエラーが発生しました。")
+        st.error(f"SCENARIOエラー: {data.get('status')} / {data.get('text')}")
+        return
+
     bot_say(data.get("response", ""))
-    st.session_state.options = data.get("options", [])
     ui = data.get("ui") or {}
     if ui.get("path"):
         st.session_state.scenario_path = ui["path"]
 
-def free_chat(text):
+    st.session_state.scenario_options = data.get("options", [])
+
+# ==========
+# 自由入力（/chat）
+# ==========
+def free_chat(text: str):
     user_say(text)
-    payload = {"message": text, "user_id": "anonymous_user"}
-    r = requests.post(CHAT_URL, json=payload, timeout=60)
-    r.raise_for_status()
-    data = r.json()
+
+    payload = {"message": text, "user_id": USER_ID}
+    data = call_json("POST", CHAT_URL, payload)
+
+    if data.get("__error__"):
+        bot_say("自由入力でエラーが発生しました。")
+        st.error(f"CHATエラー: {data.get('status')} / {data.get('text')}")
+        return
+
     bot_say(data.get("response", ""))
 
-# 初期化
-if len(st.session_state.messages) == 0:
-    try:
-        init()
-    except Exception as e:
-        bot_say("初期化に失敗しました。バックエンドURLや公開設定を確認してください。")
-        st.error(e)
+# ==========
+# UI
+# ==========
+st.title("社内チャットボット")
 
-# 吹き出し表示
-for who, text in st.session_state.messages:
-    with st.chat_message("assistant" if who == "bot" else "user"):
-        st.write(text)
+# 初期化ボタン（初回のみ自動実行でもOK）
+if not st.session_state.initialized:
+    init_scenario()
 
-# シナリオボタン（大カテゴリ/中カテゴリなど）
-if st.session_state.options:
-    cols = st.columns(4)
-    for i, opt in enumerate(st.session_state.options):
-        with cols[i % 4]:
-            if st.button(opt["label"], key=f"opt-{opt['id']}-{i}"):
-                scenario_select(opt["id"], opt["label"])
-                st.rerun()
+render_chat()
 
-# 自由入力
-text = st.chat_input("質問を入力してください")
+# ---- シナリオボタン群
+opts = st.session_state.scenario_options or []
+if opts:
+    st.caption("カテゴリ選択（シナリオ）")
+    cols = st.columns(3)
+    for i, opt in enumerate(opts):
+        col = cols[i % 3]
+        if col.button(opt.get("label", opt.get("id", "")), key=f"opt_{i}_{opt.get('id')}"):
+            scenario_select(opt.get("id"), opt.get("label", opt.get("id")))
+
+st.divider()
+
+# ---- 自由入力
+text = st.chat_input("自由入力もできます（例：PPPoEとは？）")
 if text:
     free_chat(text)
     st.rerun()
