@@ -93,7 +93,14 @@ init_log_db()
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ★本番では絞る
+    allow_origins=[
+        "https://storage.googleapis.com",
+        "https://storage.cloud.google.com",
+        "http://localhost:8080",
+        "http://localhost:8000",
+        "http://127.0.0.1:8080",
+        "http://127.0.0.1:8000",
+        ],  # ★本番では絞る
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
