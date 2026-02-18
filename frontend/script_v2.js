@@ -70,24 +70,39 @@ document.addEventListener('DOMContentLoaded', () => {
   function appendOptions(options) {
     if (!options || options.length === 0) return;
 
-    const wrap = document.createElement('div');
-    wrap.classList.add('options-wrap');
+    // 1) category/select と nav を分ける
+    const navOpts = options.filter(o => o.action === 'nav');
+    const mainOpts = options.filter(o => o.action !== 'nav'); // selectなど
 
-    options.forEach(opt => {
+    // 2) ラップ（2段構成）
+    const container = document.createElement('div');
+    container.classList.add('options-container');
+
+    const mainRow = document.createElement('div');
+    mainRow.classList.add('options-wrap'); // 既存の横並びスタイルを流用
+
+    const navRow = document.createElement('div');
+    navRow.classList.add('nav-wrap'); // 新規（小さめ）
+
+    // ボタン生成関数
+    const makeBtn = (opt, isNav) => {
       const btn = document.createElement('button');
-      btn.classList.add('option-button');
+      btn.classList.add(isNav ? 'nav-button' : 'option-button');
       btn.textContent = opt.label;
 
       btn.addEventListener('click', () => {
-        // クリックした文言をユーザー吹き出しに出す
         appendMessage('user', opt.label);
-
-        // nav/select どちらでも node_id を送る仕様ならこれでOK
-        sendScenarioSelect(opt.id);
+        sendScenarioSelect(opt.id); // navでもselectでも同じAPI仕様ならこれでOK
       });
 
-      wrap.appendChild(btn);
-    });
+      return btn;
+    };
+
+    mainOpts.forEach(opt => mainRow.appendChild(makeBtn(opt, false)));
+    navOpts.forEach(opt => navRow.appendChild(makeBtn(opt, true)));
+
+    container.appendChild(mainRow);
+    if (navOpts.length) container.appendChild(navRow);
 
     // ボット側メッセージとして表示
     const messageElement = document.createElement('div');
@@ -95,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contentElement = document.createElement('div');
     contentElement.classList.add('message-content');
-    contentElement.appendChild(wrap);
+    contentElement.appendChild(container);
 
     messageElement.appendChild(contentElement);
     chatMessages.appendChild(messageElement);

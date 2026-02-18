@@ -299,8 +299,7 @@ def make_options(node_ids, nodes, action="select"):
 def nav_options():
     return [
         {"id": "__back__", "label": "戻る", "action": "nav"},
-        {"id": "__home__", "label": "最初に戻る", "action": "nav"},
-        {"id": "__end__", "label": "終了", "action": "nav"}
+        {"id": "__home__", "label": "最初に戻る", "action": "nav"}
     ]
 
 # =========================
@@ -461,9 +460,6 @@ async def scenario_select(req: ScenarioSelectRequest):
     node_id = req.node_id
     
     #ナビゲーション
-    if node_id == "__end__":
-        return {"response": "終了しました。", "options": [], "ui": {"mode": "scenario", "ended": True}}
-    
     if node_id == "__home__":
         root_children = SC_FEE_CHILDREN.get("root", [])
         return {

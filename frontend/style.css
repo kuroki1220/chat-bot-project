@@ -122,3 +122,33 @@ body {
 .option-button:hover{
     background: rgba(76, 175, 80, 0.08);
 }
+
+.options-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 既存 options-wrap は上段（カテゴリ）に使う */
+.nav-wrap{
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+}
+
+/* 下段（戻る/最初に戻る）は小さめ・控えめに */
+.nav-button{
+    border: 1px solid #999;
+    background: #fff;
+    color: #555;
+    border-radius: 14px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 0.85em;
+    opacity: 0.9;
+}
+
+.nav-button:hover{
+    background: rgba(0,0,0,0.05);
+    opacity: 1;
+}
