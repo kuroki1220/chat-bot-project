@@ -442,7 +442,7 @@ async def init_chat():
     # root配下（大カテゴリ）を返す
     root_children = SC_FEE_CHILDREN.get("root", [])
     
-    text = "私はスリム光 社内用チャットボットのチャッピーです。\n何が知りたいですか？"
+    text = "私はスリム通信ネットワーク 社内用チャットボットの光ボットです。\n何が知りたいですか？"
     options = make_options(root_children, SC_FEE_NODES, action="select") + nav_options()
     
     return {
