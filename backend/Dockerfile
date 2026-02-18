@@ -13,8 +13,9 @@ RUN apt-get update && \
     libffi-dev \
     zlib1g-dev \
     sqlite3 \
-    wget && \
-    rm -rf /var/lib/apt/lists/*
+    wget \
+    file \
+    && rm -rf /var/lib/apt/lists/*
 
 #最新のSQLite3をダウンロード、ビルド、インストール
 ENV SQLITE_VERSION 3.46.0

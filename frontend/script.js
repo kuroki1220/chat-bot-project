@@ -6,18 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let scenarioPath = ["root"]; //バックエンドに渡すパス
 
     // 中間サーバーのエンドポイントURLを動的に設定
-    // APIのベースURL（末尾に /chat を付けない）
-    let API_BASE;
+    let API_ENDPOINT;
     const currentHostname = window.location.hostname;
 
-    if (currentHostname === 'localhost' || currentHostname === '127.0.0.1') {
-        // ローカル環境
-        API_BASE = 'http://localhost:8000';
-        console.log("ローカル環境を検出しました。API_BASE: " + API_BASE);
-    } else {
-        // デプロイ環境（Cloud Run）
-        API_BASE = 'https://chatbot-backend-140594287961.asia-northeast1.run.app';
-        console.log("デプロイ環境を検出しました。API_BASE: " + API_BASE);
+    if (currentHostname == 'localhost' || currentHostname === '127.0.0.1'){
+        //ローカル環境の場合
+        API_ENDPOINT = 'http://localhost:8000/chat';
+        console.log("ローカル環境を検出しました。APIエンドポイント: " + API_ENDPOINT);
+    }else{
+        //Cloud Runなどのデプロイ環境の場合
+        //自分のCloud RunのService URLを記載
+        API_ENDPOINT = 'https://chatbot-backend-140594287961.asia-northeast1.run.app/chat';
+        console.log("デプロイ環境を検出しました。APIエンドポイント: " + API_ENDPOINT);
     }
 
     initScenario();
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function initScenario() {
         try {
-            const res = await fetch(`${API_BASE}/init`);
+            const res = await fetch(API_ENDPOINT.replace('/chat', '/init'));
             const data = await res.json();
 
             appendMessage('bot', data.response);
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userId = 'anonymous_user';
 
         try {
-            const res = await fetch(`${API_BASE}/scenario/select`, {
+            const res = await fetch(API_ENDPOINT.replace('/chat', '/scenario/select'), {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userId = 'anonymous_user';
 
         try {
-            const response = await fetch(`${API_BASE}/chat`, {
+            const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
