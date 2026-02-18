@@ -1,5 +1,8 @@
 node_id,parent_id,label,node_type,answer
 root,,何が知りたいですか？,category,
 fee,root,料金,category,
+setting,root,設定,category,
+construction,root,設定,category,
+trouble,root,故障・不具合,category,
 fee_cancel,fee,解約金,answer,"サービス内容・利用期間・申込時期によって異なる。必要なら契約情報を確認して判断する。"
 fee_initial,fee,初期契約料金,answer,"基本：契約料880円＋引込工事22,000円。電話やTVなど追加オプションで変動。"
