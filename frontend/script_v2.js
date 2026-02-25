@@ -41,7 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contentElement = document.createElement('div');
     contentElement.classList.add('message-content');
-    contentElement.innerHTML = String(text ?? '').replace(/\n/g, '<br>');
+    contentElement.innerHTML = String(text ?? '')
+      .replace(/\\n/g, '<br>')  // ← CSV から来る「文字としての \n」に対応
+      .replace(/\n/g, '<br>');  // ← 本物の改行にも対応
 
     messageElement.appendChild(contentElement);
     chatMessages.appendChild(messageElement);
