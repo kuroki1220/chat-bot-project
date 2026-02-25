@@ -9,7 +9,7 @@ trouble,root,故障・不具合,category,
 mypage,root,マイページ・手続き,category,
 contract_apply,contract,新規申込,category,
 contract_area,contract,提供エリア確認,category,
-contract_conditions,contract,契約条件（期間・縛り）,category,
+contract_conditions,contract,契約条件,category,
 contract_namechange,contract,名義変更,category,
 contract_transfer,contract,事業者変更番号・転用番号,category,
 contract_move,contract,引越し・移転手続き,category,
@@ -26,6 +26,7 @@ fee_option,fee,オプション料金,category,
 fee_other,fee,その他の料金,category,
 plan_internet,plan,インターネットプラン,category,
 plan_tv,plan,テレビサービス,category,
+plan_phone,plan,電話サービス・オプション,category,
 plan_security,plan,セキュリティ,category,
 plan_business,plan,ビジネス向けオプション,category,
 plan_change,plan,プラン変更,category,
@@ -51,5 +52,33 @@ trouble_tv,trouble,テレビの不具合,category,
 mypage_payment,mypage,支払情報の確認・変更,category,
 mypage_invoice,mypage,明細確認・郵送,category,
 mypage_namechange,mypage,名義変更,category,
-setting_wifi_frequency,setting_wifi,Wi-Fiの周波数について,answer,"周波数ごとに特徴が異なる。\n\n■2.4GHz\n・通信距離が長い\n・壁や床などの障害物に強い\n・遠い部屋や階が違う場合に向いている\n\n■5GHz\n・通信距離は短い\n・障害物に弱い\n・ルーターの近くで利用する場合に向いている"
+contract_apply_corporation,contract_apply,法人での申込は可能か,answer,"個人・法人ともに、すべてのプランで申込み可能。"
+contract_area_slim,contract_area,スリム光の利用可能エリア,answer,"スリム光はNTT東日本・NTT西日本のフレッツ光と同じ提供エリアで利用できる。\n提供エリアの確認はこちら：\nhttps://bb-fletsnavi.com/westlp/nttwest/index.html?vd=g1_5_2&gad_source=1&gad_campaignid=22613274467&gbraid=0AAAAA_yDh7HgPrwXQE2cYcWahoCyurNme&gclid=CjwKCAjwiY_GBhBEEiwAFaghvtjmVM4oU-xi7ssgbMYWBRYK9are89Qbfbe5Lxl9ClEqKatp88o05hoCSl0QAvD_BwE"
+contract_conditions_min,contract_conditions,最低利用期間,answer,"最低利用期間は2年。契約は2年契約の自動更新。更新月を含む2ケ月以外の解約は解約金が発生する。\n\n■解約金\n・定額制プラン：5,000円\n・電話のみプラン：2,000円\n\n工事費残債\n・工事費が分割中の場合、契約満了の2年より前に解約すると残工事費も請求される\n\n■プラン変更\n・プラン変更時は事務手数料の3,300円が発生"
+contract_conditions_pause,contract_conditions,利用休止,answer,"利用休止はできない。期間を指定した一時停止も不可。"
+contract_conditions_short,contract_conditions,短期間の利用,answer,"短期間の利用も可能。ただし契約は2年契約の自動更新。\n\n■解約金\n・更新月を含む2か月以外の解約は解約金が発生\n・定額制プラン：5,000円\n・電話のみプラン：2,200円\n\n工事費残債\n・工事費が分割中の場合、2年満了前の解約は残工事費を請求"
+contract_transfer_num,contract_transfer,転用番号取得,answer,"インターネットまたは電話で取得できる。東日本・西日本で窓口が異なる。\n\n■インターネット\n・西日本：https://flets-w.com/collabo/tenyou/entry/ \n・東日本：https://flets.com/app4/input/index/ \n\n■電話\n・西日本：0120-553-104（9:00〜17:00）\n・東日本：0120-140-202（9:00〜17:00）\n※土日祝対応可(年末年始除く)"
+contract_transfer_businessnum,contract_transfer,事業者変更番号取得,answer,"NTT光コラボ事業者から別の光コラボ事業者へ乗り換える際に必要な番号。\n\n■対象例\n・ドコモ光\n・ソフトバンク光\n・楽天ひかり\n・So-net光　など\n\n光コラボ事業者一覧：\nhttps://flets.com/collabo/list/?utm_source=chatgpt.com \n\n■取得方法\n・お客様からの電話受付後、当社で発行\n・発行後は郵送で送付\n・到着まで早くて翌日～翌々日\n\n■手数料\n・発行手数料：3,300円\n・当月利用料金と合算請求\n・有効期限：発行から2週間"
 contract_cancel_service,contract_cancel,各種サービス解約時の解約金・違約金・手数料,answer,"サービス内容・利用期間・申込時期によって異なる。\n\n・工事費が残っている場合：満了が2年のため、満了前の解約は残工事費を請求。\n・解約金：2年自動更新。更新月を含む2ケ月以外の解約は解約金が発生。\n➤定額プラン：5,000円\n➤電話のみプラン：2,200円\n・解約希望は1ヶ月前までに連絡が必要。"
+fee_initial_slim,fee_initial,スリム光の初期費用,answer,"プランや利用状況により初期費用が異なる。以下を基本とする。\n\n■ネットのみ（通常）\n・引込工事：22,000円\n・契約料：880円\n・セットアップ料：2,900円（必要な場合のみ）\n\n■ネット＋電話（通常）\n引込工事：22,000円\n・契約料：880円\n・セットアップ料：2,900円（必要な場合のみ）\n・鳴り分け（2番号以上）：1,100円\n・交換機等工事費：1,100円（必要な場合のみ）\n・同番移行工事費（1番号）：2,200円\n休止工事費：1,100円（必要な場合のみ）\n\n■ネットのみ（通常以外）\n・引込工事：22,000円（分割請求）\n・契約料：880円\n\n■ネット＋電話（通常以外）\n・引込工事：22,000円（分割請求）\n・契約料：880円\n・交換機等工事費：1,100円（必要な場合のみ）\n・同番移行工事費（1番号）：2,200円\n休止工事費：1,100円（必要な場合のみ）\n\n※状況により不要な費用・会社負担になる費用があるため、必ず個別確認すること。\n※基本同額の割引にて相殺のため実質無料。"
+fee_arrears_time,fee_arrears,未納停止後の復旧時間,answer,"入金確認後、早ければ30分〜1時間ほどで復旧する。遅い場合は数時間かかることもある。\n復旧作業は手動対応のため、営業時間内のみ受付可能。\n・平日：10:00〜19:00\n・土曜：10:00〜17:00\n・日曜、祝日、年末年始：対応不可"
+fee_payment_type,fee_payment,支払方法の種類,answer,"以下の4種類から選択可能。\n\n・請求書払い：手数料 275円\n→利用月の翌月中旬頃に郵送\n・口座振替：手数料 110円\n→利用月の翌月27日に引落\n・クレジットカード：手数料 0円\n・ドコモ携帯電話合算：手数料 165円\n\n※すべて税込"
+plan_internet_ip,plan_internet,固定IPアドレスの説明と料金,answer,"固定IPアドレスとは、常に同じIPアドレスでインターネット接続できるサービス。再接続やルーター再起動後もIPが変わらない。\n料金：月額1,650円(税込)"
+plan_internet_provider,plan_internet,プロバイダー加入の有無,answer,"インターネット利用の場合は必須。\nスリム光はプロバイダー料金込みのため、別途契約は不要。\n※電話のみプランには含まれない。"
+plan_tv_noantenna,plan_tv,アンテナ不使用でテレビ利用,answer,"スリムテレビの提供が可能。\n\n■サービス概要\n・NTT東西のフレッツテレビと同等\n・地デジ・BSが視聴可能\n・月額料金：990円（税込）\n\n■チャンネル情報\n・視聴可能チャンネルは地域により異なる\nNTT西日本：\nhttps://flets-w.com/opt/ftv/terms/channel.html \nNTT東日本：\nhttps://flets.com/ftv/channel.html \n\n■利用条件\n・提供エリア内であること\n・対応ルーター、テレビ配線が必要\n\n■オプション\n・スカパー！視聴可能\n基本料：429円＋選択チャンネル視聴料"
+plan_phone_callerid,plan_phone,ナンバーディスプレイ,answer,"ナンバーディスプレイは、着信時に相手の電話番号を表示するサービス。\n\n■料金\n・月額：440円\n・登録事務手数料：3,300円\n\n■利用開始\n・申込から3営業日後（土日祝除く）\n\n■注意\n・ナンバーディスプレイ対応の電話機が必要"
+plan_phone_voicewarp,plan_phone,転送電話（ボイスワープ）,answer,"転送番号は、かかってきた電話を別の電話番号へ転送できるサービス。\n\n■料金\n・月額：550円\n・登録事務手数料：3,300円\n\n■利用開始\n・申込から3営業日後（土日祝除く）\n\n■注意\n・利用には転送設定が必要\n・設定方法は以下を参照\nhttps://www.ntt-west.co.jp/denwa/voicewp/"
+plan_phone_addnum,plan_phone,番号追加,answer,"電話番号は最大5番号まで追加可能。\n\n■料金\n・月額：110円（番号ごと）\n・登録事務手数料：3,300円\n\n■利用開始\n・番号決定後、7営業日後（土日祝除く）\n\n■注意\n\n・複数番号やFAX併用時は「なり分け設定」が必要になる場合がある\n・なり分け：月額1,100円"
+plan_phone_callwaiting,plan_phone,キャッチホン,answer,"キャッチホンは、通話中に別の着信を受けられるサービス。\n\n■料金\n・月額：330円\n・登録事務手数料：3,300円\n\n■利用開始\n・申込から3営業日後（土日祝除く）\n\n■注意\n・特別な設定は不要\n・電話機側がキャッチホン対応している必要がある"
+plan_security_introduction,plan_security,セキュリティ導入,answer,"利用用途に応じて選択する。\n\n■アンチウイルスソフト\n・PCやスマホなど端末単位で導入\n・ウイルス検知、隔離、駆除を実施\n・利用台数分の契約が必要\n\n■UTM\n・ネットワーク全体を保護\n・不正通信や不要サイトを遮断\n・複数機能を一元管理できる\n\n■補足\n・キングソフトセキュリティ、ゼロセキュリティをスマホ・PC含め最大5台まで無料提供するサービスもある"
+plan_business_phonequantity,plan_business,電話3台以上,answer,"同時に3台以上の電話機を利用する場合は、ビジネスホンを検討する。\n\n・電話機の台数によって料金は変わらない\n・番号数や回線数によって料金が変動する"
+construction_flow_lightline,construction_flow,光回線,answer,"建物や環境により異なるが、標準的な宅内工事は以下の流れになる（所要時間:約1〜2時間）\n\n①光ファイバーケーブルの引き込み\n・電柱から光ファイバーを宅内に引き込む\n・既存の電話線、エアコンダクト、配管を活用することが多い\n・必要な場合は壁に小さな穴を開ける場合もある\n\n②光コンセントの設置\n・宅内に光コンセント(光ケーブルの差し込み口)を設置\n\n③ONU（回線終端装置）の設置\n・光コンセント付近にONUを設置し、電源を投入して回線を終端する"
+construction_start_lightline,construction_start,光回線,answer,"標準開通期間は、申込後おおよそ2週間〜2ケ月。\n・地域や建物状況により変動する\n・引っ越しシーズン（春）は特に混雑し、通常より時間がかかる"
+construction_impossible_v1,construction_impossible,工事不可と言われた,answer,"建物状況によっては可能な場合がある。\n\n■対応内容\n・光ファイバー入線のための付帯工事を行う場合がある\n・建物構造によって対応不可となることもある\n・最終判断は現地確認後となる\n\n■費用について\n・付帯工事費は当社負担となるケースが多い\n・ただし、当社負担上限を超える場合は対応不可となることがある\n・開通前にお客様都合で工事キャンセルした場合、工事費を請求する場合がある"
+construction_type_phone,construction_type,電話のみ工事,answer,"電話回線のみの工事が可能。\n\n■提供サービス\n・スリムひかり電話ネクスト\n・スリムひかり電話ネクストA\n\n■月額料金（税込）\n・スリムひかり電話ネクスト：2,750円\n・スリムひかり電話ネクストA：3,850円\n\nネクストAには以下のオプションが含まれる\n(ナンバーディスプレイ、ボイスワープ、キャッチホン、迷惑電話お断りサービス、ナンバーリクエスト、着信お知らせメール)\n\n■契約条件\n・契約期間：2年\n・満了月以外の解約：解約金2,200円"
+setting_ipv6_ex,setting_ipv6,IPv6とは,answer,"IPv6とは、インターネットプロトコルの第6版で、IPv4に続く次世代の通信規格。\n\n■IPv6の特徴\n・IPアドレスが128ビットで、約340澗(かん)個のアドレスを利用可能\n・IPv4（約43憶個）に比べ、圧倒的に多くの端末を接続できる\n・IPoE方式を利用することで、回線混雑を避けやすい\n・IPv4に比べ、通信速度が向上する場合がある\n・IPSecが標準搭載されており、セキュリティが強化されている"
+setting_device_wifi,setting_device,端末を買い替えた場合のWi-Fi設定,answer,"回線側の設定は不要。新しい端末でWi-Fiネットワークを再設定するだけでよい。\n\n■PC（Windows）\n・タスクバーのネットワークアイコンから接続するWi-Fiを選び、パスワードを入力。\n参考URL(Microsoft)\nhttps://support.microsoft.com/ja-jp/windows/windows-%E3%81%A7-wi-fi-%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF%E3%81%AB%E6%8E%A5%E7%B6%9A%E3%81%99%E3%82%8B-1f881677-b569-0cd5-010d-e3cd3579d263 \n\n■Android\n・設定→ネットワークとインターネット→利用するWi-Fiを選択し、パスワードを入力。\n参考URL(Google)\nhttps://support.google.com/android/answer/9075847?hl=ja \n\n■iPhone / iPad\n・設定→Wi-Fi→ネットワークを選び、パスワードを入力。\n参考URL(Apple)\nhttps://support.apple.com/ja-jp/111107"
+setting_wifi_frequency,setting_wifi,Wi-Fiの周波数について,answer,"周波数ごとに特徴が異なる。\n\n■2.4GHz\n・通信距離が長い\n・壁や床などの障害物に強い\n・遠い部屋や階が違う場合に向いている\n\n■5GHz\n・通信距離は短い\n・障害物に弱い\n・ルーターの近くで利用する場合に向いている"
+trouble_speed_internet,trouble_speed,インターネットの速度が遅い,answer,"通信速度が遅くなる原因は複数考えられる。以下を順に確認する。\n\n■まず試す対策\n・機器の再起動\n・Wi-Fiルーターの設置場所変更\n・Wi-Fiルーターの交換\n・中継器の導入\n\n■端末・機器側の原因\n・スマホやPCのストレージ、メモリ不足\n・OSやソフトウェアが未更新\n・端末やバッテリーの劣化、故障\n・古い機種を使用している\n\n■電波環境の問題\n・電子レンジやBluetooth機器との電波干渉\n・5GHz帯は直進性が高く、壁や床に弱い\n・Wi-Fi電波が届いていない場所で利用している\n\n■設定の問題\n・ルーターやネットワーク機器がループ接続されている\n\n■接続台数\n・同時接続台数が多いと通信速度が低下しやすい"
+trouble_equipment_router,trouble_equipment,ルーター故障,answer,"当社レンタル品の場合は交換対応。\n\n■対応内容\n・代替機を郵送\n・到着後、既存ルーターと入れ替え\n・故障品は返却袋に入れて着払い返送\n\n※自然故障の場合は無料\n※機器が非常に古い場合は、返却不要としてお客様側で処分してもらうケースもある"
+trouble_wifi_radiowave,trouble_wifi,Wi-Fi電波弱い,answer,"以下を確認する。\n\n■主な原因\n・ルーターや端末の設置場所、向きが不適切\n・壁や床などの障害物、電波干渉\n・回線の混雑\n・2.4GHz帯利用による家電との干渉\n\n■対処法\n・機器の再起動\n・設置場所や向きの変更\n・5GHz帯への切替\n・混雑時間帯を避ける\n・ファームウェア更新\n・機器の買い替え\n・中継器やメッシュWi-Fiの導入"
