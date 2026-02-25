@@ -1,4 +1,4 @@
-node_id,parent_id,label,node_type,answer
+node_id,parent_id,label,node_type,"answer"
 root,,何が知りたいですか？,category,
 contract,root,契約・申込,category,
 fee,root,料金・支払い,category,
@@ -51,4 +51,5 @@ trouble_tv,trouble,テレビの不具合,category,
 mypage_payment,mypage,支払情報の確認・変更,category,
 mypage_invoice,mypage,明細確認・郵送,category,
 mypage_namechange,mypage,名義変更,category,
-setting_wifi_frequency,setting_wifi,Wi-Fiの周波数について教えてください。,answer,周波数ごとに特徴が異なる。\n\n■2.4GHz\n・通信距離が長い\n・壁や床などの障害物に強い\n・遠い部屋や階が違う場合に向いている\n\n■5GHz\n・通信距離は短い\n・障害物に弱い\n・ルーターの近くで利用する場合に向いている
+setting_wifi_frequency,setting_wifi,Wi-Fiの周波数について,answer,"周波数ごとに特徴が異なる。\n\n■2.4GHz\n・通信距離が長い\n・壁や床などの障害物に強い\n・遠い部屋や階が違う場合に向いている\n\n■5GHz\n・通信距離は短い\n・障害物に弱い\n・ルーターの近くで利用する場合に向いている"
+contract_cancel_service,contract_cancel,各種サービス解約時の解約金・違約金・手数料,answer,"サービス内容・利用期間・申込時期によって異なる。\n\n・工事費が残っている場合：満了が2年のため、満了前の解約は残工事費を請求。\n・解約金：2年自動更新。更新月を含む2ケ月以外の解約は解約金が発生。\n➤定額プラン：5,000円\n➤電話のみプラン：2,200円\n・解約希望は1ヶ月前までに連絡が必要。"
