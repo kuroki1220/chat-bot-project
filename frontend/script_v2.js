@@ -44,7 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
       '<a href="$2" target="_blank" rel="noopener noreferrer" class="chat-link">$1</a>'
     );
 
-    // 改行を <br> に変換
+    // CSVから来る「文字としての \n」を改行にする
+    formatted = formatted.replace(/\\n/g, '<br>');
+
+    // 本物の改行コードも <br> にする
     formatted = formatted.replace(/\n/g, '<br>');
 
     return formatted;
@@ -56,9 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contentElement = document.createElement('div');
     contentElement.classList.add('message-content');
-    contentElement.innerHTML = String(text ?? '')
-      .replace(/\\n/g, '<br>')  // ← CSV から来る「文字としての \n」に対応
-      .replace(/\n/g, '<br>');  // ← 本物の改行にも対応
+    contentElement.innerHTML = formatMessageText(text);
 
     messageElement.appendChild(contentElement);
     chatMessages.appendChild(messageElement);
