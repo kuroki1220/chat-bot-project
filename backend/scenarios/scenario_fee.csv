@@ -53,10 +53,10 @@ mypage_payment,mypage,支払情報の確認・変更,category,
 mypage_invoice,mypage,明細確認・郵送,category,
 mypage_namechange,mypage,名義変更,category,
 contract_apply_corporation,contract_apply,法人での申込は可能か,answer,"個人・法人ともに、すべてのプランで申込み可能。"
-contract_area_slim,contract_area,スリム光の利用可能エリア,answer,"スリム光はNTT東日本・NTT西日本のフレッツ光と同じ提供エリアで利用できる。\n提供エリアの確認はこちら：\nhttps://bb-fletsnavi.com/westlp/nttwest/index.html?vd=g1_5_2&gad_source=1&gad_campaignid=22613274467&gbraid=0AAAAA_yDh7HgPrwXQE2cYcWahoCyurNme&gclid=CjwKCAjwiY_GBhBEEiwAFaghvtjmVM4oU-xi7ssgbMYWBRYK9are89Qbfbe5Lxl9ClEqKatp88o05hoCSl0QAvD_BwE"
-contract_conditions_min,contract_conditions,最低利用期間,answer,"最低利用期間は2年。契約は2年契約の自動更新。更新月を含む2ケ月以外の解約は解約金が発生する。\n\n■解約金\n・定額制プラン：5,000円\n・電話のみプラン：2,000円\n\n工事費残債\n・工事費が分割中の場合、契約満了の2年より前に解約すると残工事費も請求される\n\n■プラン変更\n・プラン変更時は事務手数料の3,300円が発生"
+contract_area_slim,contract_area,スリム光の利用可能エリア,answer,"スリム光はNTT東日本・NTT西日本のフレッツ光と同じ提供エリアで利用できる。\n提供エリアの確認はこちら：\n[フレッツ光提供エリア](https://bb-fletsnavi.com/westlp/nttwest/index.html)"
+contract_conditions_min,contract_conditions,最低利用期間,answer,"最低利用期間は2年。契約は2年契約の自動更新。更新月を含む2ケ月以外の解約は解約金が発生する。\n\n■解約金\n・定額制プラン：5,000円\n・電話のみプラン：2,000円\n\n■工事費残債\n・工事費が分割中の場合、契約満了の2年より前に解約すると残工事費も請求される\n\n■プラン変更\n・プラン変更時は事務手数料の3,300円が発生"
 contract_conditions_pause,contract_conditions,利用休止,answer,"利用休止はできない。期間を指定した一時停止も不可。"
-contract_conditions_short,contract_conditions,短期間の利用,answer,"短期間の利用も可能。ただし契約は2年契約の自動更新。\n\n■解約金\n・更新月を含む2か月以外の解約は解約金が発生\n・定額制プラン：5,000円\n・電話のみプラン：2,200円\n\n工事費残債\n・工事費が分割中の場合、2年満了前の解約は残工事費を請求"
+contract_conditions_short,contract_conditions,短期間の利用,answer,"短期間の利用も可能。ただし契約は2年契約の自動更新。\n\n■解約金\n・更新月を含む2か月以外の解約は解約金が発生\n・定額制プラン：5,000円\n・電話のみプラン：2,200円\n\n■工事費残債\n・工事費が分割中の場合、2年満了前の解約は残工事費を請求"
 contract_conditions_phonechange,contract_conditions,電話プラン変更時の契約期間,answer,"解約金がかかる。\nプラン変更時にリセットされ、変更日が契約開始日となります。"
 contract_namechange_contractors,contract_namechange,契約者の名義変更,answer,"変更可能。\n変更手続きには、名義変更者の身分証明書が必要。\n名義変更には約1ヶ月ほどかかる。\n\n■必要書類\n・個人 → 個人(新)：新契約者の身分証明書（運転免許証、マイナンバーカード、健康保険証＋公共料金明細）\n・個人 → 法人：登記簿の写し\n・法人 → 個人：新契約者の身分証明書（運転免許証、マイナンバーカード、健康保険証＋公共料金）\n・法人 → 法人(新) ：登記簿の写し"
 contract_transfer_num,contract_transfer,転用番号取得,answer,"インターネットまたは電話で取得できる。東日本・西日本で窓口が異なる。\n\n■インターネット\n・西日本：https://flets-w.com/collabo/tenyou/entry/ \n・東日本：https://flets.com/app4/input/index/ \n\n■電話\n・西日本：0120-553-104（9:00〜17:00）\n・東日本：0120-140-202（9:00〜17:00）\n※土日祝対応可(年末年始除く)"

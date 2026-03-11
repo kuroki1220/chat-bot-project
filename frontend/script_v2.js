@@ -35,6 +35,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================
   // UI helper
   // =========================================================
+  function formatMessageText(text) {
+    let formatted = String(text ?? '');
+
+    // [表示文字](URL) をリンク化
+    formatted = formatted.replace(
+      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer" class="chat-link">$1</a>'
+    );
+
+    // 改行を <br> に変換
+    formatted = formatted.replace(/\n/g, '<br>');
+
+    return formatted;
+  }
+  
   function appendMessage(sender, text) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('message', sender);

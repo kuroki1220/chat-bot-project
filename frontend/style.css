@@ -152,3 +152,15 @@ body {
     background: rgba(0,0,0,0.05);
     opacity: 1;
 }
+
+.chat-link{
+    color: #1a73e8;
+    text-decoration: underline;
+    font-weight: 500;
+    word-break: break-all;
+}
+
+.chat-link:hover{
+    color: #0b57d0;
+    text-decoration: underline;
+}
