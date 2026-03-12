@@ -32,8 +32,10 @@ genai.configure(api_key=api_key)
 # ========================
 # ChromaDB保存先
 # ========================
-CHROMA_DB_PATH = r"C:\開発\社内用チャットボット\chat-bot-system\chroma_db"
-
+#CHROMA_DB_PATH = r"C:\開発\社内用チャットボット\chat-bot-system\chroma_db"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)
+CHROMA_DB_PATH = os.path.join(project_root, "chroma_db")
 
 # ========================
 # 埋め込み取得関数
