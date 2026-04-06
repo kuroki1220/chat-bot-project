@@ -96,8 +96,7 @@ fee_service_Fiber-optic1,fee_service,光回線月額料金1,answer,"<h3 style=""
 <div style=""margin-top:8px;"">※料金は税込。</div>
 <div>※別途工事費、登録事務手数料が発生する場合あり。</div>
 <div>※内容は変更になる場合あり。</div>"
-fee_service_Fiber-optic2,fee_service,光回線月額料金2,answer,"<h3 style=""margin:0 0 8px 0;"">ひかり電話・テレビ・その他月額料金</h3>
-<table border=""1"" style=""border-collapse:collapse;"">
+fee_service_Fiber-optic2,fee_service,光回線月額料金2,answer,"<table border=""1"" style=""border-collapse:collapse;"">
 <tr>
 <th style=""padding:4px 8px;"">商品名</th>
 <th style=""padding:4px 8px;"">基本料金</th>
