@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ? window.__API_BASE.trim()
       : ((currentHostname === 'localhost' || currentHostname === '127.0.0.1')
           ? 'http://localhost:8000'
-          : 'https://chatbot-backend-140594287961.asia-northeast1.run.app');
+          : 'https://chatbot-backend-685448718484.asia-northeast1.run.app');
 
   // デバッグ用：ブラウザ側で確認できるように露出（注入用とは別名）
   window.__DEBUG_API_BASE = API_BASE;
