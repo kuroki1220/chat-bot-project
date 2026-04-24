@@ -415,13 +415,22 @@ def search_knowledge_with_expansion(user_message: str, n_results_each: int = 5, 
 
     logger.info(f"検索結果（スコア付き上位）:\n{dedup[:5]}")
 
-    # プロンプト用のコンテキスト文字列
-    context = "\n\n".join(
-        f"- 質問: {h['question']}\n回答: {h['answer']}" for h in dedup[:5]
-    )
-    logger.info(f"検索結果（質問+回答ペア）:\n{context}")
+    # # プロンプト用のコンテキスト文字列
+    # context = "\n\n".join(
+    #     f"- 質問: {h['question']}\n回答: {h['answer']}" for h in dedup[:5]
+    # )
+    # logger.info(f"検索結果（質問+回答ペア）:\n{context}")
 
-    return dedup, context
+    # return dedup, context
+    
+    # プロンプト用のコンテキスト文字列修正
+    MAX_CONTEXT_HITS = 2
+    MAX_ANSWER_CHARS = 400
+    
+    context = "\n\n".join(
+        f" - 質問: {h['question']}\n回答: {h['answer'][:MAX_ANSWER_CHARS]}"
+        for h in dedup[MAX_CONTEXT_HITS]
+    )
 
 
 # =========================
@@ -563,12 +572,66 @@ async def chat_with_bot(request: ChatRequest):
                     # ログ用に簡単なコンテキストを残す
                     context = f"質問: {best['question']}\nスコア: {best['score']}"
 
-        else:
-            # -------------------------
-            # ★ AI ON モード（RAG）
-            # -------------------------
-            hits, context = search_knowledge_with_expansion(request.message)
+#         else:
+#             # -------------------------
+#             # ★ AI ON モード（RAG）
+#             # -------------------------
+#             hits, context = search_knowledge_with_expansion(request.message)
 
+#             if not context.strip():
+#                 logger.info("ChromaDBに関連情報は見つかりませんでした。AI汎用回答モードに切り替えます。")
+#                 model = genai.GenerativeModel(model_name="models/gemini-2.5-pro")
+#                 prompt = f"""
+# あなたは社内のサポート用チャットボットです。
+# ユーザーの質問に対して、できる限り自分の知識で簡潔かつ丁寧に回答してください。
+# 必要であれば一般的な知識を使って補足しても構いません。
+
+# ### ユーザーの質問
+# {request.message}
+
+# ### あなたの返答（丁寧に自然な言い回しで）
+# """
+#                 response = model.generate_content(prompt)
+#                 bot_response = (response.text or "").strip()
+#             else:
+#                 final_answer_model = genai.GenerativeModel(model_name="models/gemini-2.5-pro")
+#                 prompt = f"""
+# あなたは社内のサポート用チャットボットです。
+# ユーザーの質問に対して、以下の【参考情報】を基に、簡潔かつ丁寧に回答してください。
+
+# - 【参考情報】の内容が質問に全く関連しない場合は、その情報を使わず、一般知識に基づいて回答を試みてください。
+# - もし一般知識でも回答が困難な場合は、情報が見つからなかったことを丁寧に伝えてください。
+# - 回答時は、まず【参考情報】の内容を優先してください。
+# - 丁寧な言葉遣いで回答してください。
+
+# ### ユーザーの質問
+# {request.message}
+
+# ### 参考情報
+# {context}
+
+# ### あなたの返答（丁寧に自然な言い回しで）
+# """
+#                 response = final_answer_model.generate_content(prompt)
+#                 bot_response = (response.text or "").strip()
+#                 logger.info(f"Gemini response: {bot_response}")
+
+        else:
+            # -------------------
+            # ☆ AI ON モード (RAG)
+            # -------------------
+            simple_hits = search_knowledge_simple(request.message, n_results=3)
+            
+            if simple_hits and simple_hits[0]["score"] >= 0.55:
+                logger.info(f"単純検索で十分近いヒットあり: {simple_hits}[0]")
+                top_hits = simple_hits[:2]
+                context = "\n\n".join(
+                    f"- 質問: {h['question']}\n回答: {h['answer'][:400]}"
+                    for h in top_hits
+                )
+            else:
+                hits, context = search_knowledge_with_expansion(request.message)
+                
             if not context.strip():
                 logger.info("ChromaDBに関連情報は見つかりませんでした。AI汎用回答モードに切り替えます。")
                 model = genai.GenerativeModel(model_name="models/gemini-2.5-pro")
@@ -580,30 +643,9 @@ async def chat_with_bot(request: ChatRequest):
 ### ユーザーの質問
 {request.message}
 
-### あなたの返答（丁寧に自然な言い回しで）
+### あなたの返答
 """
                 response = model.generate_content(prompt)
-                bot_response = (response.text or "").strip()
-            else:
-                final_answer_model = genai.GenerativeModel(model_name="models/gemini-2.5-pro")
-                prompt = f"""
-あなたは社内のサポート用チャットボットです。
-ユーザーの質問に対して、以下の【参考情報】を基に、簡潔かつ丁寧に回答してください。
-
-- 【参考情報】の内容が質問に全く関連しない場合は、その情報を使わず、一般知識に基づいて回答を試みてください。
-- もし一般知識でも回答が困難な場合は、情報が見つからなかったことを丁寧に伝えてください。
-- 回答時は、まず【参考情報】の内容を優先してください。
-- 丁寧な言葉遣いで回答してください。
-
-### ユーザーの質問
-{request.message}
-
-### 参考情報
-{context}
-
-### あなたの返答（丁寧に自然な言い回しで）
-"""
-                response = final_answer_model.generate_content(prompt)
                 bot_response = (response.text or "").strip()
                 logger.info(f"Gemini response: {bot_response}")
 
