@@ -679,6 +679,15 @@ async def chat_with_bot(request: ChatRequest):
             bot_response_text=bot_response,
             context_used=context,
         )
+        
+        logger.info({
+            "log_type": "test_eval",
+            "user_id": request.user_id,
+            "query": request.message,
+            "model": "gemini-2.5-pro",
+            "response": bot_response,
+            "context": context,
+        })
 
     return {"response": bot_response}
 
