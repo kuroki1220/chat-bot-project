@@ -536,10 +536,13 @@ async def scenario_select(req: ScenarioSelectRequest):
 
 @app.post("/chat")
 async def chat_with_bot(request: ChatRequest):
+    start_time = time.time()
+    
     logger.info(f"[User: {request.user_id}] Message received: {request.message}")
 
     bot_response = ""
     context = ""
+    simple_hits = []
 
     try:
         if not GEMINI_API_KEY:
@@ -679,6 +682,8 @@ async def chat_with_bot(request: ChatRequest):
             bot_response_text=bot_response,
             context_used=context,
         )
+        
+        latency = round(time.time() - start_time, 2)  # ★追加③（ここ）
         
         logger.info({
             "log_type": "test_eval",
