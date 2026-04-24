@@ -687,6 +687,8 @@ async def chat_with_bot(request: ChatRequest):
             "model": "gemini-2.5-pro",
             "response": bot_response,
             "context": context,
+            "score": simple_hits[0]["score"] if simple_hits else None,
+            "latency_sec": latency
         })
 
     return {"response": bot_response}
