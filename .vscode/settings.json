@@ -1,5 +1,6 @@
 {
   "python.analysis.extraPaths": [
     "../data_processing"
-  ]
+  ],
+  "java.format.settings.url": "eclipse-formatter.xml"
 }

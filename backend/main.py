@@ -426,11 +426,15 @@ def search_knowledge_with_expansion(user_message: str, n_results_each: int = 5, 
     # プロンプト用のコンテキスト文字列修正
     MAX_CONTEXT_HITS = 2
     MAX_ANSWER_CHARS = 400
-    
+
     context = "\n\n".join(
-        f" - 質問: {h['question']}\n回答: {h['answer'][:MAX_ANSWER_CHARS]}"
-        for h in dedup[MAX_CONTEXT_HITS]
+        f"- 質問: {h['question']}\n回答: {h['answer'][:MAX_ANSWER_CHARS]}"
+        for h in dedup[:MAX_CONTEXT_HITS]
     )
+
+    logger.info(f"検索結果（質問+回答ペア）:\n{context}")
+
+    return dedup, context
 
 
 # =========================
@@ -647,7 +651,22 @@ async def chat_with_bot(request: ChatRequest):
 """
                 response = model.generate_content(prompt)
                 bot_response = (response.text or "").strip()
-                logger.info(f"Gemini response: {bot_response}")
+            else:
+                final_answer_model = genai.GenerativeModel(model_name="models/gemini-2.5-pro")
+                prompt = f"""
+            あなたは社内のサポート用チャットボットです。
+            ユーザーの質問に対して、以下の【参考情報】を優先して、簡潔に回答してください。
+            
+            ### ユーザーの質問
+            {request.message}
+            
+            ### 参考情報
+            {context}
+            """
+                response = final_answer_model.generate_content(prompt)
+                bot_response = (response.text or "").strip()
+                
+            logger.info(f"Gemini response: {bot_response}")
 
     except Exception as e:
         logger.exception("Geminiチャット処理でエラーが発生しました。")
