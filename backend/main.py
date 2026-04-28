@@ -583,7 +583,7 @@ async def chat_with_bot(request: ChatRequest):
             best_score = simple_hits[0]["score"] if simple_hits else 0
             selected_model_name = None
 
-            if simple_hits and best_score >= 0.80:
+            if simple_hits and best_score >= 0.75:
                 # かなり近い一致 → AIを使わずDB回答をそのまま返す
                 best = simple_hits[0]
                 bot_response = best["answer"]
@@ -725,6 +725,7 @@ async def chat_with_bot(request: ChatRequest):
             "query": request.message,
             # "model": "gemini-2.5-pro",
             "model": selected_model_name or "db_direct",
+            "response": bot_response,
             "context": context,
             "score": simple_hits[0]["score"] if simple_hits else None,
             "latency_sec": latency
