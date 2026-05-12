@@ -109,8 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = opt.label;
 
       btn.addEventListener('click', () => {
+        if (!isNav) {
+          btn.classList.add('selected');
+        }
+
         appendMessage('user', opt.label);
-        sendScenarioSelect(opt.id); // navでもselectでも同じAPI仕様ならこれでOK
+        sendScenarioSelect(opt.id);
       });
 
       return btn;
