@@ -1,317 +1,317 @@
-:root {
-    --main-blue: #1fa4d0;
-    --main-blue-dark: #178fb8;
-    --sub-blue: #55d6ee;
-    --chat-bg: #e9eef2;
-    --user-blue: #6fd0f6;
-    --nav-gray: #9b9b9b;
-    --nav-gray-dark: #858585;
-    --text: #222;
+:root {                               /* 色や共通値を変数としてまとめている */
+    --main-blue: #1fa4d0;           /* 共通で使うCSS変数 */
+    --main-blue-dark: #178fb8;      /* 共通で使うCSS変数 */
+    --sub-blue: #55d6ee;            /* 共通で使うCSS変数 */
+    --chat-bg: #e9eef2;             /* 共通で使うCSS変数 */
+    --user-blue: #6fd0f6;           /* 共通で使うCSS変数 */
+    --nav-gray: #9b9b9b;            /* 共通で使うCSS変数 */
+    --nav-gray-dark: #858585;       /* 共通で使うCSS変数 */
+    --text: #222;                   /* 共通で使うCSS変数 */
 }
 
 * {
-    box-sizing: border-box;
+    box-sizing: border-box;           /* 全要素に共通設定を適用 */
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #dfe5e9;
-    color: var(--text);
+body {                                /* ページ全体の見た目を設定 */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   /* フォント指定 */
+    margin: 0;                        /* 外側の余白を指定 */
+    padding: 0;                       /* 内側の余白を指定 */
+    min-height: 100vh;                /* 最小高さを指定 */
+    display: flex;                    /* 表示形式を指定 */
+    justify-content: center;          /* 横方向の配置を指定 */
+    align-items: center;              /* 縦方向の配置を指定 */
+    background-color: #dfe5e9;      /* 背景色を指定 */
+    color: var(--text);               /* 文字色を指定 */
 }
 
-.chat-container {
-    width: 100%;
-    max-width: 450px;
-    height: 90vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    overflow: hidden;
+.chat-container {                     /* チャットボット全体の外枠 */
+    width: 100%;                      /* 横幅指定 */
+    max-width: 450px;                 /* 最大横幅指定 */
+    height: 90vh;                     /* 高さ指定 */
+    display: flex;                    /* 表示形式を指定 */
+    flex-direction: column;           /* flexの並び方向を指定 */
+    background-color: #fff;         /* 背景色を指定 */
+    overflow: hidden;                 /* はみ出た部分の表示方法を指定 */
 }
 
 /* ヘッダー高さはここで調整 */
-.chat-header {
-    background: linear-gradient(135deg, var(--main-blue), var(--sub-blue));
-    padding: 9px 12px;     /* ヘッダーの幅調整 */
-    text-align: center;
-    flex-shrink: 0;
+.chat-header {                        /* 上部ヘッダーの設定 */
+    background: linear-gradient(135deg, var(--main-blue), var(--sub-blue));  /* 背景を指定 */
+    padding: 9px 12px;                /* ヘッダーの幅調整 */
+    text-align: center;               /* 文字揃えを指定 */
+    flex-shrink: 0;                   /* 縮小されるかを指定する */
 }
 
 /* ロゴサイズはここで調整 */
 .header-logo {
-    width: 175px;     /* ヘッダー内ロゴの大きさ調整 */
-    max-width: 90%;
-    display: block;
-    margin: 0 auto;
+    width: 175px;                     /* ヘッダー内ロゴの大きさ調整 */
+    max-width: 90%;                   /* 最大横幅を指定 */
+    display: block;                   /* 表示形式を指定 */
+    margin: 0 auto;                   /* 外側の余白を指定 */
 }
 
-.chat-messages {
-    flex: 1;
-    padding: 16px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: var(--chat-bg);
+.chat-messages {                      /* チャット履歴エリアの設定 */
+    flex: 1;                          /* flex内での伸縮を指定 */
+    padding: 16px;                    /* 内側の余白を指定 */
+    overflow-y: auto;                 /* 縦方向にはみ出た部分の表示方法を指定 */
+    display: flex;                    /* 表示形式を指定 */
+    flex-direction: column;           /* flexの並び方向を指定する */
+    gap: 10px;                        /* 要素同士の隙間を指定 */ 
+    background-color: var(--chat-bg); /* 背景色を指定 */
 }
 
-.message {
-    display: flex;
-    font-size: 0.95em;
+.message {                            /* 各メッセージ共通の設定 */
+    display: flex;                    /* 表示形式を指定 */
+    font-size: 0.95em;                /* 文字サイズを指定 */
 }
 
-.message.user {
-    justify-content: flex-end;
+.message.user {                       /* ユーザー側メッセージの配置 */
+    justify-content: flex-end;        /* 横方向の配置を指定 */
 }
 
-.message.bot {
-    justify-content: flex-start;
+.message.bot {                        /* ボット側メッセージの配置 */
+    justify-content: flex-start;      /* 横方向の配置を指定 */
 }
 
-.message-content {
-    max-width: 75%;
-    padding: 10px 15px;
-    border-radius: 18px;
-    line-height: 1.5;
-    word-wrap: break-word;
+.message-content {                    /* 吹き出し本体の共通設定 */
+    max-width: 75%;                   /* 最大横幅を指定 */
+    padding: 10px 15px;               /* 内側の余白を指定 */
+    border-radius: 18px;              /* 角丸を指定 */
+    line-height: 1.5;                 /* 行の高さを指定する */
+    word-wrap: break-word;            /* 長い文字列の折り返しを指定 */
 }
 
 /* ユーザー吹き出し */
-.message.user .message-content {
-    background-color: var(--user-blue);
-    color: #111;
-    border-bottom-right-radius: 2px;
+.message.user .message-content {      /* ユーザー吹き出しの見た目 */
+    background-color: var(--user-blue); /* 背景色を指定 */
+    color: #111;                    /* 文字色を指定 */
+    border-bottom-right-radius: 2px;  /* 右下の角丸を指定 */
 }
 
 /* ボット吹き出し */
-.message.bot .message-content {
-    background-color: #ffffff;
-    color: var(--text);
-    border-bottom-left-radius: 2px;
+.message.bot .message-content {       /* ボット吹き出しの見た目 */
+    background-color: #ffffff;      /* 背景色を指定 */
+    color: var(--text);               /* 文字色を指定 */
+    border-bottom-left-radius: 2px;   /* 左下の角丸を指定 */
 }
 
 /* 選択肢が入る吹き出しだけ白い箱を消す */
-.message.bot .message-content:has(.options-container) {
-    background: transparent;
-    padding: 0;
-    border-radius: 0;
-    max-width: 95%;
-    width: 95%;
+.message.bot .message-content:has(.options-container) {   /* 選択肢を入れる吹き出しの白背景を設定で消す */
+    background: transparent;          /* 背景を指定 */
+    padding: 0;                       /* 内側の余白を指定 */
+    border-radius: 0;                 /* 角丸を指定 */
+    max-width: 95%;                   /* 最大横幅を指定 */
+    width: 95%;                       /* 横幅を指定 */
 }
 
 /* 選択肢全体 */
-.options-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+.options-container {                  /* 選択肢と戻るボタン全体の入れ物 */
+    width: 100%;                      /* 横幅を指定 */
+    display: flex;                    /* 表示形式を指定 */
+    flex-direction: column;           /* flexの並び方向を指定 */
+    gap: 0;                           /* 要素同士の隙間を指定 */
 }
 
 /* 選択肢：2列均等 */
-.options-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-    gap: 0;
-    overflow: visible;
-    border-radius: 18px 18px 0 0;
+.options-wrap {                       /* 選択肢ボタンのグリッド配置 */
+    display: grid;                    /* 表示形式を指定 */
+    grid-template-columns: 1fr 1fr;   /* グリッドの列数・幅を指定 */
+    width: 100%;                      /* 横幅を指定 */
+    gap: 0;                           /* 要素同士の隙間を指定 */
+    overflow: visible;                /* はみ出た部分の表示方法を指定 */
+    border-radius: 18px 18px 0 0;     /* 角丸を指定 */
 }
 
 /* 奇数個の最後の選択肢を横いっぱいにする */
-.option-button:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
+.option-button:last-child:nth-child(odd) {   /* 奇数個の最後の選択肢を横一杯にする */
+    grid-column: 1 / -1;              /* この値で見た目や動きを調整 */
 }
 
-.option-button {
-    border: 1px solid #ffffff;
-    background-color: var(--main-blue);
-    color: #ffffff;
-    border-radius: 0;
-    padding: 13px 12px;
-    min-height: 46px;
-    font-weight: 700;
-    font-size: 0.95em;
-    text-align: left;
-    cursor: pointer;
-    transition:
+.option-button {                      /* 選択肢ボタンの基本デザイン */
+    border: 1px solid #ffffff;      /* 枠線を指定 */
+    background-color: var(--main-blue);  /* 背景色を指定 */
+    color: #ffffff;                 /* 文字色を指定 */
+    border-radius: 0;                 /* 角丸を指定 */
+    padding: 13px 12px;               /* 内側の余白を指定 */
+    min-height: 46px;                 /* 最小高さを指定 */
+    font-weight: 700;                 /* 文字の太さを指定 */
+    font-size: 0.95em;                /* 文字サイズを指定 */
+    text-align: left;                 /* 文字揃えを指定 */
+    cursor: pointer;                  /* カーソル形状を指定 */
+    transition:               
         background-color 0.18s ease,
         color 0.18s ease,
         transform 0.18s ease,
         box-shadow 0.18s ease;
 }
 
-.option-button::before {
-    content: "●";
-    color: #ffffff;
-    margin-right: 12px;
-    font-size: 2.5em;
+.option-button::before {              /* 選択肢左側の丸アイコン */
+    content: "●";                     /* 疑似要素に表示する内容を指定 */
+    color: #ffffff;                 /* 文字色を指定 */
+    margin-right: 12px;               /* 右側の外側余白を指定 */
+    font-size: 2.5em;                 /* 文字サイズを指定 */
 }
 
 /* ホバー：反転＋少し浮く */
-.option-button:hover {
-    background-color: #ffffff;
-    color: var(--main-blue);
-    border: 1px solid #ffffff;
+.option-button:hover {                /* 選択肢ボタンにカーソルを合わせた時の見た目 */
+    background-color: #ffffff;      /* 背景色を指定 */
+    color: var(--main-blue);          /* 文字色を指定 */
+    border: 1px solid #ffffff;      /* 枠線を指定 */
     box-shadow:
         inset 0 0 0 2px var(--main-blue),
         0 6px 14px rgba(0, 0, 0, 0.20);
-    transform: translateY(-3px);
-    z-index: 3;
+    transform: translateY(-3px);       /* 移動・拡大縮小などを指定 */
+    z-index: 3;                        /* 重なり順を指定する */
 }
 
-.option-button:hover::before {
-    content: "○";
-    color: var(--main-blue);
-    font-size: 2.5em;
-    font-weight: 700;
-    -webkit-text-stroke: 1px var(--main-blue);
+.option-button:hover::before {         /* ホバー時の丸アイコン */
+    content: "○";                      /* 疑似要素に表示する内容を指定 */
+    color: var(--main-blue);           /* 文字色を指定 */
+    font-size: 2.5em;                  /* 文字サイズを指定 */
+    font-weight: 700;                  /* 文字の太さを指定 */
+    -webkit-text-stroke: 1px var(--main-blue);   /* 文字の緑取りを指定 */
 }
 
 /* クリック後 */
-.option-button.selected {
-    background-color: #ffffff;
-    color: var(--main-blue);
-    border: 1px solid #ffffff;
-    box-shadow: inset 0 0 0 2px var(--main-blue);
+.option-button.selected {               /* クリック後の選択肢ボタン */
+    background-color: #ffffff;        /* 背景色を指定 */
+    color: var(--main-blue);            /* 文字色を指定 */
+    border: 1px solid #ffffff;        /* 枠線を指定 */
+    box-shadow: inset 0 0 0 2px var(--main-blue);   /* 影を指定 */
 }
 
-.option-button.selected::before {
-    content: "○";
-    color: var(--main-blue);
-    font-size: 2.5em;
-    font-weight: 700;
-    -webkit-text-stroke: 1px var(--main-blue);
+.option-button.selected::before {       /* クリック後の丸アイコン */
+    content: "○";                       /* 疑似要素に表示する内容を指定 */
+    color: var(--main-blue);            /* 文字色を指定 */
+    font-size: 2.5em;                   /* 文字サイズを指定 */
+    font-weight: 700;                   /* 文字の太さを指定 */
+    -webkit-text-stroke: 1px var(--main-blue);   /* 文字の縁取りを指定 */
 }
 
 /* 戻る・最初に戻る */
-.nav-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-    gap: 0;
+.nav-wrap {                             /* 戻る・最初に戻るボタンの入れ物 */
+    display: grid;                      /* 表示形式を指定 */
+    grid-template-columns: 1fr 1fr;     /* グリッドの列数・幅を指定 */
+    width: 100%;                        /* 横幅を指定 */
+    gap: 0;                             /* 要素同士の隙間を指定する */
 }
 
-.nav-button {
-    border: 1px solid #ffffff;
-    background-color: var(--nav-gray);
-    color: #ffffff;
-    border-radius: 0;
-    padding: 8px 12px;
-    min-height: 34px;
-    font-size: 0.85em;
-    cursor: pointer;
+.nav-button {                           /* 戻る系ボタンの基本デザイン */
+    border: 1px solid #ffffff;        /* 枠線を指定 */
+    background-color: var(--nav-gray);  /* 背景色を指定する */
+    color: #ffffff;                   /* 文字色を指定 */
+    border-radius: 0;                   /* 角丸を指定 */
+    padding: 8px 12px;                  /* 内側の余白を指定 */
+    min-height: 34px;                   /* 最小高さを指定 */
+    font-size: 0.85em;                  /* 文字サイズを指定 */
+    cursor: pointer;                    /* カーソル形状を指定 */
     transition:
         background-color 0.18s ease,
         transform 0.18s ease,
         box-shadow 0.18s ease;
 }
 
-.nav-button:last-child {
-    background-color: var(--nav-gray-dark);
-    border-bottom-right-radius: 18px;
+.nav-button:last-child {                /* 最初に戻るボタン側の設定 */
+    background-color: var(--nav-gray-dark);   /* 背景色を指定 */
+    border-bottom-right-radius: 18px;   /* 右下の丸角を指定 */
 }
 
-.nav-button:hover {  /* 戻るボタン */
-    background-color: #b3b3b3;
-    transform: translateY(-1.5px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
-    z-index: 2;
+.nav-button:hover {                     /* 戻るボタン */
+    background-color: #b3b3b3;        /* 背景色を指定 */
+    transform: translateY(-1.5px);      /* 移動・拡大縮小などを指定 */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);   /* 影を指定 */
+    z-index: 2;                         /* 重なり順を指定 */
 }
 
-.nav-button:last-child:hover {
-    background-color: #6f6f6f;
+.nav-button:last-child:hover {          /* 最初に戻るボタンのホバー設定 */
+    background-color: #6f6f6f;        /* 背景色を指定 */
 }
 
 /* 入力欄 */
-.chat-input-area {
-    display: flex;
-    padding: 15px;
-    border-top: 1px solid #d6d6d6;
-    background-color: #f2f4f6;
-    flex-shrink: 0;
+.chat-input-area {                      /* 入力欄エリアの設定 */
+    display: flex;                      /* 表示形式を指定 */
+    padding: 15px;                      /* 内側の余白を指定 */
+    border-top: 1px solid #d6d6d6;    /* 上側の枠線を指定 */
+    background-color: #f2f4f6;        /* 背景色を指定 */
+    flex-shrink: 0;                     /* 縮小されるかを指定 */
 }
 
-#user-input {
-    flex: 1;
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 22px;
-    font-size: 1em;
-    margin-right: 10px;
-    outline: none;
+#user-input {                           /* 質問入力欄の設定 */
+    flex: 1;                            /* flex内での伸縮を指定 */
+    padding: 10px 15px;                 /* 内側の余白を指定 */
+    border: 1px solid #ccc;           /* 枠線を指定 */
+    border-radius: 22px;                /* 角丸を指定 */
+    font-size: 1em;                     /* 文字サイズを指定 */
+    margin-right: 10px;                 /* 右側の外側余白を指定 */
+    outline: none;                      /* フォーカス枠を指定 */
 }
 
-#user-input:focus {
-    border-color: var(--main-blue);
-    box-shadow: 0 0 0 2px rgba(31, 164, 208, 0.2);
+#user-input:focus {                     /* 入力欄にカーソルがある時の見た目 */
+    border-color: var(--main-blue);     /* この値で見た目や動きを調整 */
+    box-shadow: 0 0 0 2px rgba(31, 164, 208, 0.2);   /* 影を指定 */
 }
 
-#send-button {
-    background-color: var(--main-blue);
-    color: #ffffff;
-    border: none;
-    border-radius: 22px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 1em;
+#send-button {                          /* 送信ボタンの基本デザイン */
+    background-color: var(--main-blue); /* 背景色を指定 */
+    color: #ffffff;                   /* 文字色を指定 */
+    border: none;                       /* 枠線を指定 */
+    border-radius: 22px;                /* 角丸を指定 */
+    padding: 10px 20px;                 /* 内側の余白を指定 */
+    cursor: pointer;                    /* カーソル形状を指定 */
+    font-size: 1em;                     /* 文字サイズを指定 */
     transition:
         background-color 0.18s ease,
         transform 0.18s ease,
         box-shadow 0.18s ease;
 }
 
-#send-button:hover {
-    background-color: var(--main-blue-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+#send-button:hover {                    /* 送信ボタンのホバー設定 */
+    background-color: var(--main-blue-dark);  /* 背景色を指定 */
+    transform: translateY(-1px);        /* 移動・拡大縮小などを指定 */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);   /* 影を指定 */
 }
 
-#send-button:disabled {
-    background-color: #a0a0a0;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+#send-button:disabled {                 /* 送信ボタン無効時の見た目 */
+    background-color: #a0a0a0;        /* 背景色を指定 */
+    cursor: not-allowed;                /* カーソル形状を指定 */
+    transform: none;                    /* 移動・拡大縮小などを指定 */
+    box-shadow: none;                   /* 影を指定 */
 }
 
-.chat-link {
-    display: block;
-    margin-top: 8px;
-    padding: 10px 12px;
-    background-color: #ffffff;
-    border: 1px solid #dce6ec;
-    border-radius: 8px;
-    color: var(--main-blue);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9em;
-    word-break: break-all;
+.chat-link {                            /* 通常リンクのカード風表示 */
+    display: block;                     /* 表示形式を指定 */
+    margin-top: 8px;                    /* 上側の外側余白を指定 */
+    padding: 10px 12px;                 /* 内側の余白を指定 */
+    background-color: #ffffff;        /* 背景色を指定 */
+    border: 1px solid #dce6ec;        /* 枠線を指定 */
+    border-radius: 8px;                 /* 角丸を指定 */
+    color: var(--main-blue);            /* 文字色を指定 */
+    text-decoration: none;              /* リンク等の下線を指定 */
+    font-weight: 600;                   /* 文字の太さを指定 */
+    font-size: 0.9em;                   /* 文字サイズを指定 */
+    word-break: break-all;              /* 長い文字列の折り返しを指定 */
 }
 
-.chat-link::before {
-    content: "🔗 ";
+.chat-link::before {                    /* 通常リンクのアイコン表示 */
+    content: "🔗 ";                     /* 疑似要素に表示する内容を指定 */
 }
 
-.chat-link:hover {
-    background-color: #f3fbff;
-    border-color: var(--main-blue);
-    color: var(--main-blue-dark);
-    transform: translateY(-1px);
+.chat-link:hover {                       /* 通常リンクのアイコン表示 */
+    background-color: #f3fbff;         /* 背景色を指定 */
+    border-color: var(--main-blue);      /* この値で見た目や動きを調整 */
+    color: var(--main-blue-dark);        /* 文字色を指定 */
+    transform: translateY(-1px);         /* 移動・拡大縮小などを指定 */
 }
 
-.message.bot.wide-message .message-content {
-    max-width: 95%;
-    width: 95%;
+.message.bot.wide-message .message-content {  /* 横幅を広げるボット回答 */
+    max-width: 95%;                      /* 最大横幅を指定 */
+    width: 95%;                          /* 横幅を指定 */
 }
 
 /* 回答直後の戻るボタン群だけ、上の回答にくっつける */
-.message.bot:has(.options-container) {
-    margin-top: -6px;
+.message.bot:has(.options-container) {   /*回答と選択肢/戻るボタンの上下隙間を調整 */
+    margin-top: -6px;                    /* 上側の外側余白を指定 */
 }
 
 /* =========================
@@ -320,7 +320,7 @@ body {
 
 /* 回答と選択肢/ナビの横幅を完全に揃える */
 .message.bot.wide-message .message-content,
-.message.bot .message-content:has(.options-container) {
+.message.bot .message-content:has(.options-container) {  
     max-width: 100%;
     width: 100%;
 }
@@ -402,7 +402,7 @@ body {
 
 /* 回答直後の戻るボタンをさらに密着 */
 .message.bot:has(.options-container) {
-    margin-top: -6px;
+    margin-top: 5px;
 }
 
 .link-preview-card {
