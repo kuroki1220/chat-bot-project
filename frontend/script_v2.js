@@ -411,7 +411,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function showInitialLoading() {
       chatMessages.innerHTML = `
         <div class="initial-loader">
-          <div class="rainbow-marker-loader"></div>
+          <div class="simple-line-loader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <p>LOADING</p>
+          </div>
         </div>
       `;
     }

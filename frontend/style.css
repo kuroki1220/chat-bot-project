@@ -320,149 +320,149 @@ body {                                /* ページ全体の見た目を設定 */
 
 /* 回答と選択肢/ナビの横幅を完全に揃える */
 .message.bot.wide-message .message-content,
-.message.bot .message-content:has(.options-container) {  
-    max-width: 100%;
-    width: 100%;
+.message.bot .message-content:has(.options-container) {   /* 選択肢を入れる吹き出しの白背景を消す設定 */
+    max-width: 100%;                     /* 最大横幅を指定 */
+    width: 100%;                         /* 横幅を指定 */
 }
 
 /* 通常の途中質問は今まで通り */
-.message.bot:not(.wide-message) .message-content:not(:has(.options-container)) {
-    max-width: 75%;
-    width: auto;
+.message.bot:not(.wide-message) .message-content:not(:has(.options-container)) {   /* 途中質問の吹き出し幅を通常幅に戻す */
+    max-width: 75%;                      /* 最大横幅を指定 */
+    width: auto;                         /* 横幅を指定 */
 }
 
 /* 選択肢エリアは角丸を保持 */
-.options-wrap {
-    border-radius: 18px 18px 0 0;
-    overflow: visible;
+.options-wrap {                          /* 選択ボタンのグリッド配置 */
+    border-radius: 18px 18px 0 0;        /* 角丸を指定 */
+    overflow: visible;                   /* はみ出た部分の表示方法を指定 */
 }
 
 /* 左上のボタンを丸角にする */
-.options-wrap .option-button:first-child {
-    border-top-left-radius: 18px;
+.options-wrap .option-button:first-child {   /* このセレクタに対する設定 */
+    border-top-left-radius: 18px;        /* 左上の角丸を指定 */
 }
 
 /* 右上のボタンを丸角にする */
-.options-wrap .option-button:nth-child(2) {
-    border-top-right-radius: 18px;
+.options-wrap .option-button:nth-child(2) {  /* このセレクタに対する設定 */
+    border-top-right-radius: 18px;       /* 右上の角丸を指定 */
 }
 
 /* 選択肢の縦幅を少し狭くする */
-.option-button {
-    min-height: 48px;
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    line-height: 1.35;
+.option-button {                         /* 選択肢ボタンの基本デザイン */
+    min-height: 48px;                    /* 最小高さを指定 */
+    padding: 10px 12px;                  /* 内側の余白を指定 */
+    display: flex;                       /* 表示形式を指定 */
+    align-items: center;                 /* 縦方向の配置を指定 */
+    line-height: 1.35;                   /* 行の高さを指定 */
 }
 
 /* 丸アイコンと文字の高さを揃える */
-.option-button::before {
-    content: "●";
-    color: #ffffff;
-    font-size: 1.9em;
-    line-height: 1;
-    margin-right: 12px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    flex-shrink: 0;
+.option-button::before {                 /* 選択肢左側の丸アイコン */
+    content: "●";                        /* 疑似要素に表示する内容を指定 */
+    color: #ffffff;                    /* 文字色を指定 */
+    font-size: 1.9em;                    /* 文字サイズを指定 */
+    line-height: 1;                      /* 行の高さを指定 */
+    margin-right: 12px;                  /* 右側の外側余白を指定 */
+    display: inline-flex;                /* 表示形式を指定 */
+    align-items: center;                 /* 縦方向の配置を指定 */
+    justify-content: center;             /* 横方向の指定 */
+    width: 22px;                         /* 横幅を指定 */
+    flex-shrink: 0;                      /* 縮小されるかを指定 */
 }
 
 /* ホバー時・選択後も角丸に沿って青枠を内側表示 */
 .option-button:hover,
-.option-button.selected {
-    border: 1px solid #ffffff;
+.option-button.selected {                /* クリック時の選択肢ボタン */
+    border: 1px solid #ffffff;         /* 枠線を指定 */
     box-shadow:
         inset 0 0 0 2px var(--main-blue),
         0 6px 14px rgba(0, 0, 0, 0.20);
 }
 
 /* 選択後は浮かせない。ホバーだけ浮かせる */
-.option-button.selected {
-    transform: none;
+.option-button.selected {                 /* クリック後の選択肢ボタン */
+    transform: none;                      /* 移動・拡大縮小などを指定 */
 }
 
 /* 選択後かつホバーした時だけ浮かせる */
-.option-button.selected:hover {
-    transform: translateY(-3px);
+.option-button.selected:hover {           /* このセレクタに対する設定 */
+    transform: translateY(-3px);          /* 移動・拡大縮小などを指定 */
 }
 
 /* ○の位置と太さ調整 */
 .option-button:hover::before,
-.option-button.selected::before {
-    content: "○";
-    color: var(--main-blue);
-    font-size: 1.9em;
-    line-height: 1;
-    font-weight: 700;
-    -webkit-text-stroke: 0.6px var(--main-blue);
+.option-button.selected::before {         /* クリック後の丸アイコン */
+    content: "○";                         /* 疑似要素に表示する内容を指定 */
+    color: var(--main-blue);              /* 文字色を指定 */
+    font-size: 1.9em;                     /* 文字サイズを指定 */
+    line-height: 1;                       /* 行の高さを指定 */ 
+    font-weight: 700;                     /* 文字の太さを指定 */
+    -webkit-text-stroke: 0.6px var(--main-blue);  /* 文字の縁取りを指定 */
 }
 
 /* 回答直後の戻るボタンをさらに密着 */
-.message.bot:has(.options-container) {
-    margin-top: 5px;
+.message.bot:has(.options-container) {    /* 回答と選択肢/戻るボタンの上下隙間を調整 */
+    margin-top: 5px;                      /* 上側の外側余白を指定 */
 }
 
-.link-preview-card {
-    display: flex;
-    gap: 8px;
-    margin-top: 6px;
-    padding: 6px 8px;
-    background: #f4f6ff;
-    border: 1px solid #d8deef;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text);
-    overflow: hidden;
-    align-items: center;
-    min-height: 72px;
+.link-preview-card {                      /* 疑似リンクプレビューカード全体 */
+    display: flex;                        /* 表示形式を指定 */
+    gap: 8px;                             /* 要素同士の隙間を指定 */
+    margin-top: 6px;                      /* 上側の外側余白を指定 */
+    padding: 6px 8px;                     /* 内側の余白を指定 */
+    background: #f4f6ff;                /* 背景を指定 */
+    border: 1px solid #d8deef;          /* 枠線を指定 */
+    border-radius: 8px;                   /* 角丸を指定 */
+    text-decoration: none;                /* リンク等の下線を指定 */
+    color: var(--text);                   /* 文字色を指定 */
+    overflow: hidden;                     /* はみ出た部分の表示方法を指定 */
+    align-items: center;                  /* 縦方向の配置を指定 */
+    min-height: 72px;                     /* 最小高さを指定 */
 }
 
-.link-preview-card:hover {
-    background: #eef4ff;
-    border-color: var(--main-blue);
-    transform: translateY(-1px);
+.link-preview-card:hover {                /* リンクプレビューカードのホバー設定 */
+    background: #eef4ff;                /* 背景を指定 */
+    border-color: var(--main-blue);       /* この値で見た目や動きを調整 */
+    transform: translateY(-1px);          /* 移動・拡大縮小などを指定 */
 }
 
-.link-preview-image {
-    width: 72px;
-    min-width: 72px;
-    height: 56px;
-    border-radius: 6px;
-    overflow: hidden;
-    background: #ffffff;
+.link-preview-image {                     /* リンクプレビュー左画像枠 */
+    width: 72px;                          /* 横幅を指定 */
+    min-width: 72px;                      /* この値で見た目や動きを調整 */
+    height: 56px;                         /* 高さを指定 */
+    border-radius: 6px;                   /* 角丸を指定 */
+    overflow: hidden;                     /* はみ出た部分の表示方法を指定 */
+    background: #ffffff;                /* 背景を指定 */
 }
 
-.link-preview-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+.link-preview-image img {                 /* リンクプレビュー画像そのもの */
+    width: 100%;                          /* 横幅を指定 */
+    height: 100%;                         /* 高さを指定 */
+    object-fit: contain;                  /* 画像の収まり方を指定 */
 }
 
-.link-preview-title {
-    font-weight: 700;
-    color: #333;
-    font-size: 0.82em;
-    margin-bottom: 2px;
-    line-height: 1.25;
+.link-preview-title {                     /* リンクプレビューのタイトル */
+    font-weight: 700;                     /* 文字の太さを指定 */
+    color: #333;                        /* 文字色を指定 */
+    font-size: 0.82em;                    /* 文字サイズを指定 */
+    margin-bottom: 2px;                   /* 下側の外側余白を指定 */
+    line-height: 1.25;                    /* 行の高さを指定 */
 }
 
-.link-preview-description {
-    font-size: 0.72em;
-    color: #333;
-    line-height: 1.25;
-    margin-bottom: 2px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+.link-preview-description {               /* リンクプレビューの説明文 */
+    font-size: 0.72em;                    /* 文字サイズを指定 */
+    color: #333;                        /* 文字色を指定 */
+    line-height: 1.25;                    /* 行の高さを指定 */
+    margin-bottom: 2px;                   /* 下側の外側余白を指定 */
+    display: -webkit-box;                 /* 表示形式を指定 */
+    -webkit-line-clamp: 2;                /* 表示する最大行数を指定 */
+    -webkit-box-orient: vertical;         /* 複数行省略表示の向きを指定 */
+    overflow: hidden;                     /* はみ出た部分の表示方法を指定 */
 }
 
-.link-preview-domain {
-    font-size: 0.7em;
-    color: #777;
+.link-preview-domain {                    /* リンクプレビューのドメイン表示 */
+    font-size: 0.7em;                     /* 文字サイズを指定 */
+    color: #777;                        /* 文字色を指定 */
 }
 
 /* =========================
