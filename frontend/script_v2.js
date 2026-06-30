@@ -224,11 +224,39 @@ document.addEventListener('DOMContentLoaded', () => {
   },
 
     "https://bb-fletsnavi.com/westlp/nttwest/index.html?vd=g1_5_2&gad_source=1&gad_campaignid=22613274467&gbraid=0AAAAA_yDh7HgPrwXQE2cYcWahoCyurNme&gclid=CjwKCAjwiY_GBhBEEiwAFaghvtjmVM4oU-xi7ssgbMYWBRYK9are89Qbfbe5Lxl9ClEqKatp88o05hoCSl0QAvD_BwE":{
-    title: "フレッツ光 サービス概要 | NTT西日本 | フレッツ光／NTT豪華キャンペーンお申し込みサイト",
+    title: "フレッツ光 サービス概要 | NTT西日本 | フレッツ光",
     description: "フレッツ光は最大10Gbps高速インターネット！NTTフレッツ光豪華特典で大幅割引！さらに当サイト特典で最大79,000円現金キャッシュバック。",
     domain: "bb-fletsnavi.com",
-    image: "https://logospng.org/download/apple/logo-apple-1536.png"
-  }
+    image: "https://th.bing.com/th/id/R.f8cd1860fec07065d621938f06b2d7ea?rik=YOo8%2bxPIgFLFOA&riu=http%3a%2f%2fbb-navi.jp%2fimage%2fwest%2fetc%2fflets_logo.gif&ehk=qzA3xSEydew0HH0vHV1nwiM%2fjNFEiJL1zZs1N40aVAw%3d&risl=&pid=ImgRaw&r=0"
+  },
+
+  "https://www.slim-j.net/service/slim-phone/":{
+    title: "スリムひかり電話 ｜スリム光 - インターネット・光回線",
+    description: "品質はそのままで、固定電話料金をリーズナブルに",
+    domain: "www.slim-j.net",
+    image: "https://www.slim-j.net/wordpress/wp-content/uploads/2025/03/slim_line_logo.png"
+  },
+
+  "https://www.tp-link.com/jp/support/faq/1699/":{
+    title: "無線LAN中継器の初期設定の手順について | TP-Link 日本",
+    description: "",
+    domain: "www.tp-link.com",
+    image: "https://src.dutchcn.com/forum/202108/16/095238pxccmt4txjm2xz4c.png"
+  },
+
+  "https://www.tp-link.com/jp/support/faq/1699/":{
+    title: "Tetherアプリで中継器の初期設定を行う手順 | TP-Link 日本",
+    description: "",
+    domain: "www.tp-link.com",
+    image: "https://src.dutchcn.com/forum/202108/16/095238pxccmt4txjm2xz4c.png"
+  },
+
+  "https://www.tp-link.com/jp/support/faq/87/":{
+    title: "TP-Linkルーターの管理画面にログインするには | TP-Link 日本",
+    description: "",
+    domain: "www.tp-link.com",
+    image: "https://src.dutchcn.com/forum/202108/16/095238pxccmt4txjm2xz4c.png"
+  },
 
 };
 
