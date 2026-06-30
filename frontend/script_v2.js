@@ -221,7 +221,15 @@ document.addEventListener('DOMContentLoaded', () => {
     description: "公開ネットワーク、保護されたネットワーク、過去に接続したことがあるネットワークなど、デバイスをWi-Fiネットワークに接続する。",
     domain: "support.apple.com",
     image: "https://logospng.org/download/apple/logo-apple-1536.png"
+  },
+
+    "https://bb-fletsnavi.com/westlp/nttwest/index.html?vd=g1_5_2&gad_source=1&gad_campaignid=22613274467&gbraid=0AAAAA_yDh7HgPrwXQE2cYcWahoCyurNme&gclid=CjwKCAjwiY_GBhBEEiwAFaghvtjmVM4oU-xi7ssgbMYWBRYK9are89Qbfbe5Lxl9ClEqKatp88o05hoCSl0QAvD_BwE":{
+    title: "フレッツ光 サービス概要 | NTT西日本 | フレッツ光／NTT豪華キャンペーンお申し込みサイト",
+    description: "フレッツ光は最大10Gbps高速インターネット！NTTフレッツ光豪華特典で大幅割引！さらに当サイト特典で最大79,000円現金キャッシュバック。",
+    domain: "bb-fletsnavi.com",
+    image: "https://logospng.org/download/apple/logo-apple-1536.png"
   }
+
 };
 
   // =========================================================
