@@ -286,13 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
     image: "https://logodownload.org/wp-content/uploads/2014/09/asus_logo.png"
   },
 
-  "https://www.iodata.jp/support/qanda/answer/s30352.htm":{
-    title: "【Wi-Fiルーター】設定画面の開き方（Magical Finder）",
-    description: "",
-    domain: "www.iodata.jp",
-    image: "https://www.bcnretail.com/files/topics/51547_ext_05_0.jpg"
-  },
-
   "https://support.nintendo.com/jp/switch/internet/wireless.html":{
     title: "無線でのインターネット接続方法｜Nintendo Switch サポート情報｜任天堂サポート",
     description: "Nintendo Switchを無線でインターネットに接続する方法をご案内します。",
