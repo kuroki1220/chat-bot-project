@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     image: "https://src.dutchcn.com/forum/202108/16/095238pxccmt4txjm2xz4c.png"
   },
 
-  "https://www.tp-link.com/jp/support/faq/1699/":{
+  "https://www.tp-link.com/jp/support/faq/1373/":{
     title: "Tetherアプリで中継器の初期設定を行う手順 | TP-Link 日本",
     description: "",
     domain: "www.tp-link.com",
@@ -256,6 +256,76 @@ document.addEventListener('DOMContentLoaded', () => {
     description: "",
     domain: "www.tp-link.com",
     image: "https://src.dutchcn.com/forum/202108/16/095238pxccmt4txjm2xz4c.png"
+  },
+
+  "https://www.aterm.jp/support/guide/":{
+    title: "機能別設定ガイド｜目的別で探す｜Aterm（エーターム） サポートデスク",
+    description: "機能別設定ガイドは、NEC・Wi-Fi（無線LAN）ルータ・Atermの各機能の設定・操作方法をご案内するコンテンツです。「クイック設定Web（Web設定画面）の開き方」、「初期化方法」、「ルータ機能停止方法」につきましては、こちらをご参照ください",
+    domain: "www.aterm.jp",
+    image: "https://www.aterm.jp/support/images/header/logo.png"
+  },
+
+  "https://www.buffalo.jp/support/faq/detail/129.html":{
+    title: "Wi-Fiルーターの設定画面を表示する方法",
+    description: "Wi-Fiルーターの設定画面を表示する方法に関するFAQ。バッファローのサポートのコンテンツをご紹介。",
+    domain: "www.buffalo.jp",
+    image: "https://tse1.mm.bing.net/th/id/OIP.MfQZYf0c-VBCbZ_EnCgzsAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+  },
+
+  "https://qa.elecom.co.jp/faq_detail.html?id=4003&category=152":{
+    title: "ルーター 型番別初期設定方法の一覧",
+    description: "ルーター 型番別初期設定方法の一覧",
+    domain: "qa.elecom.co.jp",
+    image: "https://tse4.mm.bing.net/th/id/OIP.lVPzIM7fSx134yq6UJC8JAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+  },
+
+  "https://www.asus.com/jp/support/faq/1005263/":{
+    title: "[WiFi ルーター] ASUS ルーターの管理画面（Web GUI）にアクセスする方法",
+    description: "",
+    domain: "www.asus.com",
+    image: "https://logodownload.org/wp-content/uploads/2014/09/asus_logo.png"
+  },
+
+  "https://www.iodata.jp/support/qanda/answer/s30352.htm":{
+    title: "【Wi-Fiルーター】設定画面の開き方（Magical Finder）",
+    description: "",
+    domain: "www.iodata.jp",
+    image: "https://www.bcnretail.com/files/topics/51547_ext_05_0.jpg"
+  },
+
+  "https://support.nintendo.com/jp/switch/internet/wireless.html":{
+    title: "無線でのインターネット接続方法｜Nintendo Switch サポート情報｜任天堂サポート",
+    description: "Nintendo Switchを無線でインターネットに接続する方法をご案内します。",
+    domain: "support.nintendo.com",
+    image: "https://static.vecteezy.com/system/resources/previews/020/109/194/large_2x/nintendo-switch-logo-free-download-free-vector.jpg"
+  },
+
+  "https://support.nintendo.com/jp/switch/internet/wired.html":{
+    title: "有線でのインターネット接続方法｜Nintendo Switch サポート情報｜任天堂サポート",
+    description: "Nintendo Switchを有線（LANケーブル）でインターネットに接続する方法をご案内します。",
+    domain: "support.nintendo.com",
+    image: "https://static.vecteezy.com/system/resources/previews/020/109/194/large_2x/nintendo-switch-logo-free-download-free-vector.jpg"
+  },
+
+  "https://www.playstation.com/ja-jp/support/connectivity/internet-connect-playstation/":{
+    title: "PlayStationでインターネット接続を設定する方法",
+    description: "PlayStation®5 / PlayStation®4でインターネット接続を設定します。",
+    domain: "www.playstation.com",
+    image: "https://logos-world.net/wp-content/uploads/2020/11/PlayStation-Logo.png"
+  },
+
+  "https://support.xbox.com/ja-JP/help/hardware-network/connect-network/network-settings":{
+    title: "Xbox 本体のネットワーク設定",
+    description: "",
+    domain: "support.xbox.com",
+    image: "https://static.vecteezy.com/system/resources/previews/020/975/583/original/xbox-logo-xbox-icon-transparent-free-png.png"
+  },
+
+  "https://www.wikihow.jp/psp%E3%82%92%E3%83%AF%E3%82%A4%E3%83%A4%E3%83%AC%E3%82%B9%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF%E3%81%AB%E6%8E%A5%E7%B6%9A%E3%81%99%E3%82%8B":{
+    title: "PSPをWi-Fiに接続する方法(トラブルシューティングのヒント付き)",
+    description: "このwikiHowでは、PlayStation Portable(PSP)ハンドヘルドデバイスを無線インターネットネットワークに接続する方法をご説明します。PSPがネットワークに接続できない場合は、ネットワークのセキュリティ設定を変更する必要があるかもしれません。 WLANスイッチがONになっていることをご確認ください。Wi-Fi接続を有効にするには、PSPのWLANスイッチを切り替える必要...",
+    domain: "www.wikihow.jp",
+    image: "https://www.wikihow.com/images/thumb/2/2d/Connect-a-PSP-to-a-Wireless-Network-Step-9-Version-3.jpg/v4-728px-Connect-a-PSP-to-a-Wireless-Network-Step-9-Version-3.jpg.webp"
   },
 
 };
