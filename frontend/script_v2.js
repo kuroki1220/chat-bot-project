@@ -32,6 +32,43 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter') sendMessage();
   });
 
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+
+    // リンク以外をクリックした場合は何もしない
+    if (!link) {
+      return;
+    }
+
+    const url = link.href;
+
+    // http、httpsのリンクだけを対象にする
+    if (!/^https?:\/\//i.test(url)) {
+      return;
+    }
+
+    // FileMakerのWebビューア内から開いている場合
+    if (
+      window.FileMaker &&
+      typeof window.FileMaker.PerformScript === 'function'
+    ) {
+      // Webビューア内でリンク先へ移動するのを止める
+      event.preventDefault();
+
+      // FileMaker側のスクリプトへURLを渡す
+      window.FileMaker.PerformScript(
+        '外部ブラウザでURLを開く',
+        url
+      );
+
+      return;
+    }
+
+    // ChromeやEdgeで直接チャットボットを開いている場合
+    event.preventDefault();
+    window.open(url, '_blank', 'noopener,noreferrer');
+  });
+
   const LINK_PREVIEWS = {
 
   "": {
